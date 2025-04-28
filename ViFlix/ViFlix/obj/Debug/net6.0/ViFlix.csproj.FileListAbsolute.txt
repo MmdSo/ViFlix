@@ -1,0 +1,7 @@
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.csproj.AssemblyReference.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.GeneratedMSBuildEditorConfig.editorconfig
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.AssemblyInfoInputs.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.AssemblyInfo.cs
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.csproj.CoreCompileInputs.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.MvcApplicationPartsAssemblyInfo.cs
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.MvcApplicationPartsAssemblyInfo.cache

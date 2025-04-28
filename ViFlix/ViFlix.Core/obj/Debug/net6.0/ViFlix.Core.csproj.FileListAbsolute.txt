@@ -1,0 +1,15 @@
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\bin\Debug\net6.0\ViFlix.Core.deps.json
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\bin\Debug\net6.0\ViFlix.Core.dll
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\bin\Debug\net6.0\ref\ViFlix.Core.dll
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\bin\Debug\net6.0\ViFlix.Core.pdb
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.csproj.AssemblyReference.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.GeneratedMSBuildEditorConfig.editorconfig
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.AssemblyInfoInputs.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.AssemblyInfo.cs
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.csproj.CoreCompileInputs.cache
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\staticwebassets.build.json
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\staticwebassets.development.json
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\scopedcss\bundle\ViFlix.Core.styles.css
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.dll
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ref\ViFlix.Core.dll
+F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Core\obj\Debug\net6.0\ViFlix.Core.pdb
