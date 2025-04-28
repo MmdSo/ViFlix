@@ -1,11 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers().AddXmlSerializerFormatters();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
+builder.Services.AddMvc();
+builder.Services.AddRazorPages();
+
+builder.Services.AddDbContext<ViFlix.Data.Context.AppDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("ViFlixConectionString"))
+.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+, ServiceLifetime.Transient);
+
 
 var app = builder.Build();
 

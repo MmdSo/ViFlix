@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "fjJG+tuXB6xGfmRPb9CushBvy8uDLMiPo9WI9mikE95oqJvc+FSHWCv5B8DkzCg53OCiuE9/9dhSK/3YYZL7cw==",
+  "dgSpecHash": "hD9bo/RQmjisFBDmHiUI42GrXGvzodp/eyfkWtRyaU0mcfnp+YdpK8JUA3Zyagrwm67Yl+qwNCHa0Qf1Z0mi8Q==",
   "success": true,
-  "projectFilePath": "F:\\github\\Viflix-site\\ViFlix\\ViFlix\\ViFlix.Data\\ViFlix.Data.csproj",
+  "projectFilePath": "F:\\github\\Viflix-site\\ViFlix\\ViFlix.Data\\ViFlix.Data.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Vidar\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Vidar\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.0\\microsoft.aspnetcore.authorization.6.0.0.nupkg.sha512",

@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "454a736b-f6d1-4251-90d5-9bfb94b6057b": {
+      "ProjectGuid": "454a736b-f6d1-4251-90d5-9bfb94b6057b",
+      "DisplayName": "ViFlix.Data",
+      "ColorIndex": 0
+    },
+    "a01c4baf-497f-4b2d-9330-8c61e005841f": {
+      "ProjectGuid": "a01c4baf-497f-4b2d-9330-8c61e005841f",
+      "DisplayName": "ViFlix",
+      "ColorIndex": 1
+    },
+    "6de473d4-0af2-47eb-99e3-27759e5b5195": {
+      "ProjectGuid": "6de473d4-0af2-47eb-99e3-27759e5b5195",
+      "DisplayName": "ViFlix.Core",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}

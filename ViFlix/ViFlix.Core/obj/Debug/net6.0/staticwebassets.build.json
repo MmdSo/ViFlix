@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "9gSuxNmyTtSHiO5yVp5dlJsQhh+LU4vZKRzJblMMm1E=",
+  "Hash": "QsvhyE8xk2G0W51pY1QRtGxMQIymvK23KA/SAfowrxQ=",
   "Source": "ViFlix.Core",
   "BasePath": "_content/ViFlix.Core",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "F:\\github\\Viflix-site\\ViFlix\\ViFlix.Data\\ViFlix.Data.csproj",
+      "Version": 2,
+      "Source": "ViFlix.Data",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "TargetFramework;RuntimeIdentifier",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "TargetFramework;RuntimeIdentifier"
+    }
+  ],
   "DiscoveryPatterns": [],
   "Assets": []
 }

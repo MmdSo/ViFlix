@@ -8,7 +8,7 @@ namespace ViFlix.Data.Context
 {
     public class BaseEntitiies
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public DateTime DataCreated { get; set; }
         public DateTime DataModified { get; set; }
         public bool IsDelete { get; set; }
