@@ -28,7 +28,7 @@ namespace ViFlix.Data.Movies
         [ForeignKey("GanreId")]
         public List<Ganres> ganre { get; set; }
 
-
+        public List<Reviews> review { get; set; }
         #endregion
     }
 }
