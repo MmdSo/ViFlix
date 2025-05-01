@@ -15,6 +15,7 @@ namespace ViFlix.Data.Movies
         public DateTime ReleaseDate { get; set; }
         public bool IsCompleted { get; set; } 
         public string? Link { get; set; }
+        public string? Trailer { get; set; }
 
         #region Relations
         public List<Reviews> reviews { get; set; }
