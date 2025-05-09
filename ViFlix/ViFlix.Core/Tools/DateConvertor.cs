@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace FirstShop.Core.Tools
+namespace ViFlix.Core.Tools
 {
     public static class DateConvertor
     {

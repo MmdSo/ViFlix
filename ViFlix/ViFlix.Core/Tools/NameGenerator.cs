@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FirstShop.Core.Tools
+namespace ViFlix.Core.Tools
 {
     public class NameGenerator
     {

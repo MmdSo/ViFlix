@@ -55,7 +55,7 @@ namespace ViFlix.Data.Repository
             return _dbSet.AsAsyncEnumerable<TEntity>();
         }
 
-        public TEntity GetEntityBuId(long? Id)
+        public TEntity GetEntityById(long? Id)
         {
             return _dbSet.SingleOrDefault<TEntity>(e => e.Id == Id);
         }

@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 
-namespace FirstShop.Core.Tools
+namespace ViFlix.Core.Tools
 {
     public class SendEmail
     {

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 
-namespace FirstShop.Core.Tools
+namespace ViFlix.Core.Tools
 {
     public interface IViewRenderService
     {

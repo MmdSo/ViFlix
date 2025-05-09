@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace FirstShop.Core.Tools
+namespace ViFlix.Core.Tools
 {
     public class ImageConverter
     {

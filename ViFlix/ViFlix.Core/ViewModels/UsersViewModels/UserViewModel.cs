@@ -15,6 +15,7 @@ namespace ViFlix.Core.ViewModels.UsersViewModels
         public int? age { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
+        public string Password { get; set; }
         public string? avatar { get; set; }
         public long RoleId { get; set; }
     }

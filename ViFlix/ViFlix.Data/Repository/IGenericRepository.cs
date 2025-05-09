@@ -12,7 +12,7 @@ namespace ViFlix.Data.Repository
         IEnumerable<TEntity> GetAll();
         IAsyncEnumerable<TEntity> GetAllAsync();
         Task<TEntity> GetEntityByIdAsync(long? Id);
-        TEntity GetEntityBuId(long? Id);
+        TEntity GetEntityById(long? Id);
         Task<long> AddEntity(TEntity entity);
         void DeleteEntity(TEntity entity);
         void EditEntity(TEntity entity);
