@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using ViFlix.Core.Services.User.PermissionsServices;
+using ViFlix.Core.Services.User.RolesServices;
+using ViFlix.Core.Services.User.UserServices;
+using ViFlix.Data.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,14 @@ builder.Services.AddDbContext<ViFlix.Data.Context.AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ViFlixConectionString"))
 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 , ServiceLifetime.Transient);
+
+
+builder.Services.AddSingleton(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IRoleServices, RoleServices>();
+builder.Services.AddTransient<IPermissionServices, PermissionServices>();
 
 
 var app = builder.Build();

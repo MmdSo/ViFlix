@@ -38,7 +38,7 @@ namespace ViFlix.Core.Services.User.UserServices
             SaveChanges().GetAwaiter();
         }
 
-        public async Task<long> AddUser(UserViewModel user)
+        public async Task<long> AddUser(UserViewModel user )
         {
             var person = _mapper.Map<UserViewModel, SiteUsers>(user);
             await AddEntity(person);
