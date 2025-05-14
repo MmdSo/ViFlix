@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FirstShop.Core.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ViFlix.Core.Services.User.UserServices;
@@ -58,7 +59,7 @@ namespace ViFlix.Controllers
         [HttpPut("EditUser")]
         public async Task<IActionResult> EditUser([FromForm]UserViewModel user , long id)
         {
-            var existUser = _userServices.GetEntityById(id);
+            var existUser = _userServices.GetUserById(id);
             if(existUser == null)
             {
                 return NotFound("User not found !");
@@ -70,12 +71,89 @@ namespace ViFlix.Controllers
             existUser.Email = user.Email;
             existUser.PhoneNumber = user.PhoneNumber;
             existUser.age = user.age;
-            existUser.role = existUser.role;
             existUser.Password = user.Password;
 
-            await _userServices.EditUser(existUser);
+           await _userServices.EditUser(existUser);
 
             return Ok();
+        }
+
+        [HttpDelete("DeleteUser")]
+        public async Task<IActionResult> DeleteUser(long id)
+        {
+            var us = _userServices.GetUserById(id);
+
+            if (us == null)
+            {
+                return NotFound(new { message = "User Not found !" });
+            }
+
+            await _userServices.DeleteUser(id);
+
+            return Ok();
+        }
+
+        [HttpPut("ChangeUserEmail")]
+        public async Task<IActionResult> ChangeUserEmail([FromForm]ChangeEmailViewModel email)
+        {
+            var mail = _userServices.ChangeEmail(email);
+            return Ok(mail);
+        }
+
+        [HttpPut("ChangeUserPassword")]
+        public async Task<IActionResult> ChangeUserPassord([FromForm] ChangePasswordViewModel pass)
+        {
+            var password = _userServices.ChangePassword(pass);
+            return Ok(password);
+        }
+
+        [HttpPost("UserRegister")]
+        public async Task<IActionResult> UserRegister([FromForm] RegisterViewModel register)
+        {
+            if(_userServices.UserNameExist(register.UserName))
+            {
+                return BadRequest("This username is already taken");
+            }
+
+            var user = await _userServices.Register(register);
+            return Ok(user);
+        }
+
+        [HttpPost("UserLogin")]
+        public IActionResult UserLogin([FromForm] LoginViewModel login)
+        {
+            string pass = PasswordHelper.EncodePasswordMd5(login.Password);
+            if(login.Password != null && login.UserName != null)
+            {
+                var user = _userServices.Login(login);
+
+                if(user == null)
+                {
+                    return Unauthorized();
+                }
+            }      
+                return Unauthorized("username and password dosnt mathch !");
+        }
+
+        [HttpGet("UserProfilById")]
+        public ActionResult<ProfileViewModel> UserProfilById(long id)
+        {
+            var prof = _userServices.GetUserByIdProfile(id);
+            return prof;
+        }
+
+        [HttpGet("GetUserByIdPasswordFromApi/{id}")]
+        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi(long id)
+        {
+            var pass = _userServices.GetUserByIdChangePaswword(id);
+            return Ok(pass);
+        }
+
+        [HttpGet("GetUserByIdEmailFromApi/{id}")]
+        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi(long id)
+        {
+            var mail = _userServices.GetUserByIdChangeEmail(id);
+            return Ok(mail);
         }
     }
     #endregion
