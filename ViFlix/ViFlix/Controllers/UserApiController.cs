@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Core.Tools;
 using ViFlix.Core.ViewModels.UsersViewModels;
+using ViFlix.Data.Users;
 
 namespace ViFlix.Controllers
 {
@@ -143,17 +143,85 @@ namespace ViFlix.Controllers
         }
 
         [HttpGet("GetUserByIdPasswordFromApi/{id}")]
-        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi(long id)
+        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi([FromForm] long id)
         {
             var pass = _userServices.GetUserByIdChangePaswword(id);
             return Ok(pass);
         }
 
         [HttpGet("GetUserByIdEmailFromApi/{id}")]
-        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi(long id)
+        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi([FromForm] long id)
         {
             var mail = _userServices.GetUserByIdChangeEmail(id);
             return Ok(mail);
+        }
+
+        [HttpGet("GetUserIdByUsernameFromApi")]
+        public ActionResult<UserViewModel> GetUserIdByUsernameFromApi([FromForm] string name)
+        {
+            var User = _userServices.GetUserIdByUserName(name);
+            return Ok(name);
+        }
+
+        [HttpPut("EditProfile")]
+        public async Task<IActionResult> EditProfile([FromForm] ProfileViewModel prof, long id, IFormFile AvatarImg)
+        {
+            var user = _userServices.GetUserById(id);
+            if(user == null)
+            {
+                return NotFound("User not found!");
+            }
+            
+            user.age = prof.age;
+            user.PhoneNumber = prof.PhoneNumber;
+            user.LastName = prof.LastName;
+            user.FirstName = prof.FirstName;
+
+            string fileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(AvatarImg.FileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Avatar", fileName);
+
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await AvatarImg.CopyToAsync(stream);
+            }
+
+
+            prof.avatar = "/Images/Avatar" + fileName;
+
+            var us = _mapper.Map<UserViewModel, ProfileViewModel>(user);
+            await _userServices.EditProfile(us, AvatarImg);
+
+            return Ok();
+        }
+
+        [HttpPost("AddRoleIdToUserFromApi")]
+        public IActionResult AddRoleIdToUserFromApi([FromBody] List<long> roleId, [FromQuery] long userId)
+        {
+            if (roleId == null || !roleId.Any())
+                return BadRequest("Dont get any Role!");
+
+            _userServices.AddRoleToUser(roleId, userId);
+
+            return Ok();
+        }
+
+        [HttpGet("GetUserRolesByUserIdFromApi")]
+        public async Task<IActionResult> GetUserRolesByUserIdFromApi([FromForm]long id)
+        {
+            var user = _userServices.GetUserRolesByUserID(id);
+
+            return Ok(user);
+        }
+
+        [HttpPut("UpdateUserRolesByApi")]
+        public IActionResult UpdateUserRolesByApi([FromForm] List<long> roleId , long userId)
+        {
+            if (roleId == null || !roleId.Any())
+                return BadRequest("Dont get any Role!");
+
+            _userServices.UpdateUserRoles(userId, roleId);
+
+            return Ok();
         }
     }
     #endregion

@@ -91,6 +91,17 @@ namespace ViFlix.Core.Services.User.UserServices
                 Tools.ImageConverter ImgResizer = new Tools.ImageConverter();
                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/avatar", prof.avatar);
             }
+            var user = GetUserById(prof.Id);
+
+            user.avatar = prof.avatar;
+            user.FirstName = prof.FirstName;
+            user.LastName = prof.LastName;
+            user.PhoneNumber = prof.PhoneNumber;
+
+            EditEntity(_mapper.Map<UserViewModel, SiteUsers>(user));
+            
+
+            await SaveChanges();
         }
 
         public async Task EditUser(UserViewModel user)
