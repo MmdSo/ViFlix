@@ -97,6 +97,8 @@ namespace ViFlix.Core.Services.User.UserServices
             user.FirstName = prof.FirstName;
             user.LastName = prof.LastName;
             user.PhoneNumber = prof.PhoneNumber;
+            user.age = prof.age;
+
 
             EditEntity(_mapper.Map<UserViewModel, SiteUsers>(user));
             

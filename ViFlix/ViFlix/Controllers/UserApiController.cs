@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
 using Microsoft.AspNetCore.Mvc;
+using ViFlix.Core.Services.User.RolesServices;
 using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Core.Tools;
 using ViFlix.Core.ViewModels.UsersViewModels;
@@ -212,17 +213,133 @@ namespace ViFlix.Controllers
 
             return Ok(user);
         }
+    }
+    #endregion
 
-        [HttpPut("UpdateUserRolesByApi")]
-        public IActionResult UpdateUserRolesByApi([FromForm] List<long> roleId , long userId)
+    #region Roles
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RoleApiController : ControllerBase
+    {
+        private readonly IMapper _mapper;
+        private readonly IRoleServices _roleServices;
+
+        public RoleApiController(IMapper mapper, IRoleServices roleServices)
         {
-            if (roleId == null || !roleId.Any())
-                return BadRequest("Dont get any Role!");
+            _mapper = mapper;
+            _roleServices = roleServices;
+        }
 
-            _userServices.UpdateUserRoles(userId, roleId);
+        public List<RoleViewModel> roleList { get; set; }
+
+        [HttpGet]
+        public List<RoleViewModel> GetRoles()
+        {
+            var roles = _roleServices.GetAllRoles().ToList();
+            return roles;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<RoleViewModel> GetRoleById(long id)
+        {
+            var role = _roleServices.GetRoleById(id);
+            if (role == null)
+                return NotFound(role);
+            else
+                return Ok(role);
+        }
+
+        [HttpPost]
+        public long AddRole(long id)
+        {
+            return id;
+        }
+
+        [HttpPost("AddRole")]
+        public async Task<long> AddRole([FromForm]RoleViewModel role)
+        {
+            return await _roleServices.AddRole(role);
+            
+        }
+
+        [HttpPut("EditRoles")]
+        public async Task<IActionResult> EditRoles(long id , [FromForm] RoleViewModel role)
+        {
+            var ro = _roleServices.GetRoleById(id);
+            if(ro == null)
+            {
+                return NotFound("Role not Found!");
+            }
+            await _roleServices.EditRole(role);
+
+            return Ok();
+        } 
+
+        [HttpDelete("DeleteRole")]
+        public async Task<IActionResult> DeleteRole(long id)
+        {
+            var ro = _roleServices.GetRoleById(id);
+
+            if (ro == null)
+            {
+                return NotFound(new { message = " Role Not found !" });
+            }
+            await _roleServices.DeleteRole(id);
 
             return Ok();
         }
-    }
+
+        [HttpGet("GetRolePermissinsByApi")]
+        public async Task<IActionResult> GetRolePermissinsByApi([FromQuery]long roleId)
+        {
+            if(roleId == null)
+            {
+                return NotFound("Role not found!");
+            }
+
+             _roleServices.GetRolePermissions(roleId);
+
+            return Ok(roleId);
+        }
+
+        [HttpPost("AddPermissionToRoleByApi")]
+        public IActionResult AddRolePermissionByApi(long roleId, [FromQuery] List<long> permissions)
+        {
+            if (permissions == null || !permissions.Any())
+                return BadRequest("Dont get any Permissions!");
+
+            _roleServices.AddPermissionsToRole(roleId, permissions);
+
+            return Ok();
+        }
+
+        [HttpPut("UpdatePermissionToRoleByApi")]
+        public IActionResult UpdatePermissionToRoleByApi(long roleId, [FromQuery] List<long> permissions)
+        {
+            if (permissions == null || !permissions.Any())
+                return BadRequest("Dont get any Permissions!");
+
+            _roleServices.UpdatePermissionsRole(roleId, permissions);
+
+            return Ok();
+        }
+
+        [HttpGet("CheckUserPermission")]
+        public IActionResult CheckUserPermission([FromQuery] long permissionId, [FromQuery] string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return BadRequest("Please Write an UserName !");
+
+            bool hasPermission = _roleServices.CheckPermission(permissionId, userName);
+            if (hasPermission)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("You dont have a permission !");
+            }
+        }
+    }        
     #endregion
 }
