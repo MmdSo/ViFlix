@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
 using Microsoft.AspNetCore.Mvc;
+using ViFlix.Core.Services.User.PermissionsServices;
 using ViFlix.Core.Services.User.RolesServices;
 using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Core.Tools;
@@ -28,8 +29,8 @@ namespace ViFlix.Controllers
         [HttpGet]
         public List<UserViewModel> GetUsers()
         {
-            var users = _userServices.GetAllUsers().ToList();
-            return users;
+            userViewModel = _userServices.GetAllUsers().ToList();
+            return userViewModel;
         }
 
         [HttpGet("{Id}")]
@@ -235,8 +236,8 @@ namespace ViFlix.Controllers
         [HttpGet]
         public List<RoleViewModel> GetRoles()
         {
-            var roles = _roleServices.GetAllRoles().ToList();
-            return roles;
+            roleList = _roleServices.GetAllRoles().ToList();
+            return roleList;
         }
 
         [HttpGet("{id}")]
@@ -340,6 +341,58 @@ namespace ViFlix.Controllers
                 return BadRequest("You dont have a permission !");
             }
         }
-    }        
+    }
+    #endregion
+
+    #region Permission
+    [Route("api/[controller]")]
+    [ApiController]
+    public class PermissionApiController : ControllerBase
+    {
+        private readonly IMapper _mapper;
+        private readonly IPermissionServices _permissionServices;
+
+        public PermissionApiController (IMapper mapper , IPermissionServices permissionServices)
+        {
+            _mapper = mapper;
+            _permissionServices = permissionServices;
+        }
+
+        public List<PermissionViewModel> permissionList { get; set; }
+
+        [HttpGet]
+        public List<PermissionViewModel> GetPermissions()
+        {
+            permissionList = _permissionServices.GetAllPermission().ToList();
+            return permissionList;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<PermissionViewModel> GetPermissionById(long id)
+        {
+            var permission = _permissionServices.GetPermissionById(id);
+            if (permission == null)
+                return NotFound(permission);
+            else
+                return Ok(permission);
+        }
+
+        [HttpGet("CheckUserPermission")]
+        public IActionResult CheckUserPermission([FromQuery] int permissionId, [FromQuery] string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return BadRequest("Please Write an UserName !");
+
+            bool hasPermission = _permissionServices.CheckPermission(permissionId, userName);
+            if (hasPermission)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("You dont have a permission !");
+            }
+        }
+    }
     #endregion
 }
