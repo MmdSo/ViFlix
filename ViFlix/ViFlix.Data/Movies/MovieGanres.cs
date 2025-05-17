@@ -10,15 +10,16 @@ namespace ViFlix.Data.Movies
 {
     public class MovieGanres: BaseEntitiies
     {
-        public long GanreId { get; set; }
+        public long GanresId { get; set; }
         public long MovieId { get; set; }
 
         # region Relations
         [ForeignKey("MovieId")]
-        public List<Movie> movie { get; set; }
+        public Movie Movie { get; set; }
 
-        [ForeignKey("GanreId")]
-        public List<Ganres> ganres { get; set; }
-        #endregion
+        [ForeignKey("GanresId")]
+        public Ganres Ganre { get; set; }
     }
+        #endregion
+    
 }

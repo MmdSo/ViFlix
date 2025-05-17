@@ -22,11 +22,9 @@ namespace ViFlix.Data.Movies
         public string? Trailer { get; set; }
 
         #region Relations 
-        [ForeignKey("LanguageId")]
-        public Language language { get; set; }
+        public List<Language> language { get; set; }
 
-        [ForeignKey("GanreId")]
-        public List<Ganres> ganre { get; set; }
+        public List<MovieGanres> moviesGanres { get; set; }
 
         public List<Reviews> review { get; set; }
         #endregion

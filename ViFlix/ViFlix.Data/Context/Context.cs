@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViFlix.Data.Movies;
+using ViFlix.Data.Subscription;
 using ViFlix.Data.Users;
 
 namespace ViFlix.Data.Context
@@ -17,5 +19,17 @@ namespace ViFlix.Data.Context
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<RolePermissions> RolePermissions { get; set; }
         public DbSet<UserRoles> UserRoles { get; set; }
+
+        public DbSet<SubscriptionPlan> SubscriptionPlan { get; set; }
+        public DbSet<UserSubscription> UserSubscription { get; set; }
+
+
+        public DbSet<Ganres> Ganres { get; set; }
+        public DbSet<Language> Language { get; set; }
+        public DbSet<Movie> Movie { get; set; }
+        public DbSet<MovieGanres> MovieGanres { get; set; }
+        public DbSet<Reviews> Reviews { get; set; }
+        public DbSet<Seasons> Seasons { get; set; }
+        public DbSet<Series> Series { get; set; }
     }
 }

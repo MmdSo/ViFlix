@@ -19,7 +19,7 @@ namespace ViFlix.Data.Movies
 
         #region Relations
         public List<Reviews> reviews { get; set; }
-        public List<Ganres> ganres { get; set; }
+        public List<Ganres> ganre { get; set; }
         public List<Seasons> season { get; set; }
 
         #endregion

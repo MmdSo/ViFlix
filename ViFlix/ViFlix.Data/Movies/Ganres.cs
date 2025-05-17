@@ -12,7 +12,7 @@ namespace ViFlix.Data.Movies
         public string Title { get; set; }
 
         #region Relations 
-        public List<Movie> movies { get; set; }
+        public List<MovieGanres> moviesGanres { get; set; }
         #endregion
     }
 }
