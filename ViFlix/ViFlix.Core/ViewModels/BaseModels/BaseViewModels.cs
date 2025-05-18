@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,14 @@ namespace ViFlix.Core.ViewModels.BaseModels
 {
     public class BaseViewModels
     {
+        
+        [BindNever]
         public long Id { get; set; }
+        [BindNever]
         public DateTime DataCreated { get; set; }
+        [BindNever]
         public DateTime DataModified { get; set; }
+        [BindNever]
         public bool IsDelete { get; set; }
     }
 }

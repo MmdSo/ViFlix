@@ -52,8 +52,6 @@ namespace ViFlix.Controllers
         [HttpPost("AddUsers")]
         public async Task<long> AddUsers([FromForm]UserViewModel user )
         {
-            
-
             var users = _userServices.AddUser(user);
             return await users;
         }
