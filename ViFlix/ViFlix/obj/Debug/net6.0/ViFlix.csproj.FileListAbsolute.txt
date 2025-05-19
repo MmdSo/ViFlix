@@ -161,3 +161,4 @@ F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\System.Security.Cryptograph
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
+F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

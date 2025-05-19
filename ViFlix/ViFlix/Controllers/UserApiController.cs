@@ -1,6 +1,10 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using ViFlix.Core.Services.User.PermissionsServices;
 using ViFlix.Core.Services.User.RolesServices;
 using ViFlix.Core.Services.User.UserServices;
@@ -17,11 +21,13 @@ namespace ViFlix.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUserService _userServices;
+        private readonly IConfiguration _config;
 
-        public UserApiController(IMapper mapper, IUserService userServices)
+        public UserApiController(IMapper mapper, IUserService userServices , IConfiguration config)
         {
             _mapper = mapper;
             _userServices = userServices;
+            _config = config;
         }
 
         public List<UserViewModel> userViewModel { get; set; }
@@ -72,6 +78,7 @@ namespace ViFlix.Controllers
             existUser.PhoneNumber = user.PhoneNumber;
             existUser.age = user.age;
             existUser.Password = user.Password;
+            existUser.RoleId = user.RoleId;
 
            await _userServices.EditUser(existUser);
 
@@ -133,6 +140,43 @@ namespace ViFlix.Controllers
                 }
             }      
                 return Unauthorized("username and password dosnt mathch !");
+        }
+
+        [HttpPost("LoginJWT")]
+        public IActionResult LoginJWT([FromQuery] LoginViewModel login)
+        {
+            string pass = PasswordHelper.EncodePasswordMd5(login.Password);
+            if (login.UserName != null && pass != null)
+            {
+                var user = _userServices.Login(login);
+
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.Name ,login.UserName)
+                    }),
+                    Expires = DateTime.UtcNow.AddMinutes(60),
+                    Issuer = _config["JwtSettings:Issuer"],
+                    Audience = _config["JwtSettings:Audience"],
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+                var tokenString = tokenHandler.WriteToken(token);
+
+                return Ok(new { Token = tokenString });
+            }
+
+            return Unauthorized("username and password dosnt mathch !");
         }
 
         [HttpGet("UserProfilById")]
