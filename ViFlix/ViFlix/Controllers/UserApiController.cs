@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,6 +56,7 @@ namespace ViFlix.Controllers
             return id;
         }
 
+        [Authorize]
         [HttpPost("AddUsers")]
         public async Task<long> AddUsers([FromForm]UserViewModel user )
         {
@@ -62,11 +64,13 @@ namespace ViFlix.Controllers
             return await users;
         }
 
+        [Authorize]
         [HttpPut("EditUser")]
         public async Task<IActionResult> EditUser([FromForm]UserViewModel user , long id)
         {
             var existUser = _userServices.GetUserById(id);
-            if(existUser == null)
+            string pass = PasswordHelper.EncodePasswordMd5(user.Password);
+            if (existUser == null)
             {
                 return NotFound("User not found !");
             }
@@ -77,7 +81,7 @@ namespace ViFlix.Controllers
             existUser.Email = user.Email;
             existUser.PhoneNumber = user.PhoneNumber;
             existUser.age = user.age;
-            existUser.Password = user.Password;
+            existUser.Password = pass;
             existUser.RoleId = user.RoleId;
 
            await _userServices.EditUser(existUser);
@@ -85,6 +89,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete("DeleteUser")]
         public async Task<IActionResult> DeleteUser(long id)
         {
@@ -100,6 +105,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut("ChangeUserEmail")]
         public async Task<IActionResult> ChangeUserEmail([FromForm]ChangeEmailViewModel email)
         {
@@ -107,6 +113,7 @@ namespace ViFlix.Controllers
             return Ok(mail);
         }
 
+        [Authorize]
         [HttpPut("ChangeUserPassword")]
         public async Task<IActionResult> ChangeUserPassord([FromForm] ChangePasswordViewModel pass)
         {
@@ -129,7 +136,7 @@ namespace ViFlix.Controllers
         [HttpPost("UserLogin")]
         public IActionResult UserLogin([FromForm] LoginViewModel login)
         {
-            string pass = PasswordHelper.EncodePasswordMd5(login.Password);
+            
             if(login.Password != null && login.UserName != null)
             {
                 var user = _userServices.Login(login);
@@ -138,6 +145,7 @@ namespace ViFlix.Controllers
                 {
                     return Unauthorized();
                 }
+                return Ok();
             }      
                 return Unauthorized("username and password dosnt mathch !");
         }
@@ -149,11 +157,6 @@ namespace ViFlix.Controllers
             if (login.UserName != null && pass != null)
             {
                 var user = _userServices.Login(login);
-
-                if (user == null)
-                {
-                    return Unauthorized();
-                }
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]);
@@ -179,6 +182,7 @@ namespace ViFlix.Controllers
             return Unauthorized("username and password dosnt mathch !");
         }
 
+        [Authorize]
         [HttpGet("UserProfilById")]
         public ActionResult<ProfileViewModel> UserProfilById(long id)
         {
@@ -186,6 +190,7 @@ namespace ViFlix.Controllers
             return prof;
         }
 
+        [Authorize]
         [HttpGet("GetUserByIdPasswordFromApi/{id}")]
         public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi([FromForm] long id)
         {
@@ -193,6 +198,7 @@ namespace ViFlix.Controllers
             return Ok(pass);
         }
 
+        [Authorize]
         [HttpGet("GetUserByIdEmailFromApi/{id}")]
         public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi([FromForm] long id)
         {
@@ -200,6 +206,7 @@ namespace ViFlix.Controllers
             return Ok(mail);
         }
 
+        [Authorize]
         [HttpGet("GetUserIdByUsernameFromApi")]
         public ActionResult<UserViewModel> GetUserIdByUsernameFromApi([FromForm] string name)
         {
@@ -207,6 +214,7 @@ namespace ViFlix.Controllers
             return Ok(name);
         }
 
+        [Authorize]
         [HttpPut("EditProfile")]
         public async Task<IActionResult> EditProfile([FromForm] ProfileViewModel prof, long id, IFormFile AvatarImg)
         {
@@ -238,6 +246,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("AddRoleIdToUserFromApi")]
         public IActionResult AddRoleIdToUserFromApi([FromBody] List<long> roleId, [FromQuery] long userId)
         {
@@ -249,6 +258,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("GetUserRolesByUserIdFromApi")]
         public async Task<IActionResult> GetUserRolesByUserIdFromApi([FromForm]long id)
         {
@@ -298,6 +308,7 @@ namespace ViFlix.Controllers
             return id;
         }
 
+        [Authorize]
         [HttpPost("AddRole")]
         public async Task<long> AddRole([FromForm]RoleViewModel role)
         {
@@ -305,6 +316,7 @@ namespace ViFlix.Controllers
             
         }
 
+        [Authorize]
         [HttpPut("EditRoles")]
         public async Task<IActionResult> EditRoles(long id , [FromForm] RoleViewModel role)
         {
@@ -316,8 +328,9 @@ namespace ViFlix.Controllers
             await _roleServices.EditRole(role);
 
             return Ok();
-        } 
+        }
 
+        [Authorize]
         [HttpDelete("DeleteRole")]
         public async Task<IActionResult> DeleteRole(long id)
         {
@@ -332,6 +345,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("GetRolePermissinsByApi")]
         public async Task<IActionResult> GetRolePermissinsByApi([FromQuery]long roleId)
         {
@@ -345,6 +359,7 @@ namespace ViFlix.Controllers
             return Ok(roleId);
         }
 
+        [Authorize]
         [HttpPost("AddPermissionToRoleByApi")]
         public IActionResult AddRolePermissionByApi(long roleId, [FromQuery] List<long> permissions)
         {
@@ -356,6 +371,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPut("UpdatePermissionToRoleByApi")]
         public IActionResult UpdatePermissionToRoleByApi(long roleId, [FromQuery] List<long> permissions)
         {
@@ -367,6 +383,7 @@ namespace ViFlix.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("CheckUserPermission")]
         public IActionResult CheckUserPermission([FromQuery] long permissionId, [FromQuery] string userName)
         {
