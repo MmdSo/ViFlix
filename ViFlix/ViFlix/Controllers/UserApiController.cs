@@ -109,15 +109,18 @@ namespace ViFlix.Controllers
         [HttpPut("ChangeUserEmail")]
         public async Task<IActionResult> ChangeUserEmail([FromForm]ChangeEmailViewModel email)
         {
-            var mail = _userServices.ChangeEmail(email);
-            return Ok(mail);
+            var userId = Convert.ToInt64(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var mail = _userServices.ChangeEmail(email , userId);
+            return Ok();
         }
 
         [Authorize]
         [HttpPut("ChangeUserPassword")]
-        public async Task<IActionResult> ChangeUserPassord([FromForm] ChangePasswordViewModel pass)
+        public async Task<IActionResult> ChangeUserPassord([FromForm] ChangePasswordViewModel pass )
         {
-            var password = _userServices.ChangePassword(pass);
+            var userId = Convert.ToInt64(User.FindFirstValue(ClaimTypes.NameIdentifier));
+           
+            var password = _userServices.ChangePassword(pass ,userId);
             return Ok(password);
         }
 
@@ -165,7 +168,9 @@ namespace ViFlix.Controllers
                 {
                     Subject = new ClaimsIdentity(new[]
                     {
-                        new Claim(ClaimTypes.Name ,login.UserName)
+                        new Claim(ClaimTypes.Name ,login.UserName),
+                        new Claim(ClaimTypes.Email , user.Email ?? ""), 
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(60),
                     Issuer = _config["JwtSettings:Issuer"],
@@ -192,7 +197,7 @@ namespace ViFlix.Controllers
 
         [Authorize]
         [HttpGet("GetUserByIdPasswordFromApi/{id}")]
-        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi([FromForm] long id)
+        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi([FromQuery] long id)
         {
             var pass = _userServices.GetUserByIdChangePaswword(id);
             return Ok(pass);
@@ -200,7 +205,7 @@ namespace ViFlix.Controllers
 
         [Authorize]
         [HttpGet("GetUserByIdEmailFromApi/{id}")]
-        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi([FromForm] long id)
+        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi([FromQuery] long id)
         {
             var mail = _userServices.GetUserByIdChangeEmail(id);
             return Ok(mail);
@@ -208,7 +213,7 @@ namespace ViFlix.Controllers
 
         [Authorize]
         [HttpGet("GetUserIdByUsernameFromApi")]
-        public ActionResult<UserViewModel> GetUserIdByUsernameFromApi([FromForm] string name)
+        public ActionResult<UserViewModel> GetUserIdByUsernameFromApi([FromQuery] string name)
         {
             var User = _userServices.GetUserIdByUserName(name);
             return Ok(name);

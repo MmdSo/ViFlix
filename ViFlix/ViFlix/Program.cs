@@ -58,12 +58,11 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("ViFlixConectionS
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>
 {
-    config.Cookie.Name = "Shop.CookieAuth";
+    config.Cookie.Name = "Viflix.CookieAuth";
     config.LoginPath = "/Login";
     config.LogoutPath = "/logout";
     config.SlidingExpiration = true;
@@ -140,6 +139,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

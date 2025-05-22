@@ -25,8 +25,8 @@ namespace ViFlix.Core.Services.User.UserServices
         Task<long> Register(RegisterViewModel register);
         Task EditUser(UserViewModel user);
         Task EditProfile(ProfileViewModel prof, IFormFile AvatarImg);
-        Task ChangePassword(ChangePasswordViewModel pass);
-        Task ChangeEmail(ChangeEmailViewModel Email);
+        Task ChangePassword(ChangePasswordViewModel pass , long userId);
+        Task ChangeEmail(ChangeEmailViewModel Email , long userId);
         Task DeleteUser(long UserId);
         void AddRoleToUser(List<long> roleID, long userID);
         List<long> GetUserRolesByUserID(long userID);

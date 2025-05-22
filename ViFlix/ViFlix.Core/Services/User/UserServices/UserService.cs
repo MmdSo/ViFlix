@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ViFlix.Core.Tools;
@@ -16,6 +17,7 @@ namespace ViFlix.Core.Services.User.UserServices
 {
     public class UserService : GenericRepository<SiteUsers>, IUserService
     {
+        
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
         public UserService(AppDbContext context, IMapper mapper) : base(context)
@@ -46,9 +48,9 @@ namespace ViFlix.Core.Services.User.UserServices
             return user.Id;
         }
 
-        public async Task ChangeEmail(ChangeEmailViewModel Email)
+        public async Task ChangeEmail(ChangeEmailViewModel Email, long userId)
         {
-            var person = GetUserById(Email.Id);
+            var person = GetUserById(userId);
             person.Email = Email.NewEmail;
             var user = _mapper.Map<UserViewModel, SiteUsers>(person);
 
@@ -56,11 +58,14 @@ namespace ViFlix.Core.Services.User.UserServices
             await SaveChanges();
         }
 
-        public async Task ChangePassword(ChangePasswordViewModel pass)
+        public async Task ChangePassword(ChangePasswordViewModel pass , long userId )
         {
-            var person = GetUserById(pass.Id);
-            person.Password = PasswordHelper.EncodePasswordMd5(pass.NewPassword);
-
+            var person = GetUserById(userId);
+            if (person.Password == PasswordHelper.EncodePasswordMd5(pass.CurrentPassword))
+            {
+                person.Password = PasswordHelper.EncodePasswordMd5(pass.NewPassword);
+            }
+            
             var user = _mapper.Map<UserViewModel, SiteUsers>(person);
 
             EditEntity(user);
