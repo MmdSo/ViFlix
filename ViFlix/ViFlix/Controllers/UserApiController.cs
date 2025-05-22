@@ -196,22 +196,6 @@ namespace ViFlix.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetUserByIdPasswordFromApi/{id}")]
-        public ActionResult<ChangePasswordViewModel> GetUserByIdPasswordFromApi([FromQuery] long id)
-        {
-            var pass = _userServices.GetUserByIdChangePaswword(id);
-            return Ok(pass);
-        }
-
-        [Authorize]
-        [HttpGet("GetUserByIdEmailFromApi/{id}")]
-        public ActionResult<ChangeEmailViewModel> GetUserByIdEmailFromApi([FromQuery] long id)
-        {
-            var mail = _userServices.GetUserByIdChangeEmail(id);
-            return Ok(mail);
-        }
-
-        [Authorize]
         [HttpGet("GetUserIdByUsernameFromApi")]
         public ActionResult<UserViewModel> GetUserIdByUsernameFromApi([FromQuery] string name)
         {
@@ -243,10 +227,10 @@ namespace ViFlix.Controllers
             }
 
 
-            prof.avatar = "/Images/Avatar" + fileName;
+            user.avatar = "/Images/Avatar" + fileName;
 
-            var us = _mapper.Map<UserViewModel, ProfileViewModel>(user);
-            await _userServices.EditProfile(us, AvatarImg);
+            var us = _mapper.Map<UserViewModel , ProfileViewModel>(user);
+            await _userServices.EditProfile(us , AvatarImg);
 
             return Ok();
         }
@@ -265,7 +249,7 @@ namespace ViFlix.Controllers
 
         [Authorize]
         [HttpGet("GetUserRolesByUserIdFromApi")]
-        public async Task<IActionResult> GetUserRolesByUserIdFromApi([FromForm]long id)
+        public async Task<IActionResult> GetUserRolesByUserIdFromApi([FromQuery]long id)
         {
             var user = _userServices.GetUserRolesByUserID(id);
 

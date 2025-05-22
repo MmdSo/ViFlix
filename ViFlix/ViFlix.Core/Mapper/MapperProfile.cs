@@ -29,6 +29,7 @@ namespace ViFlix.Core.Mapper
 
             CreateMap<SiteUsers, ProfileViewModel>();
             CreateMap<ProfileViewModel, SiteUsers>();
+            CreateMap<UserViewModel, ProfileViewModel>();
 
             CreateMap<SiteUsers, ForgetPasswordViewModel>();
             CreateMap<ForgetPasswordViewModel, SiteUsers>();
