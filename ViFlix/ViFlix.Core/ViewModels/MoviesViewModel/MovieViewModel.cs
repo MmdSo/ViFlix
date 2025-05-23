@@ -15,6 +15,8 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public string Duration { get; set; }
         public long LanguageId { get; set; }
         public long GanreId { get; set; }
+        public long? GanreTitle { get; set; }
+        public long? LanguageTitle { get; set; }
         public int Rating { get; set; }
         public string? Poster { get; set; }
         public string? DownloadLink { get; set; }

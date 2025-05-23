@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Images\Avatar\" />
+    <Folder Include="Images\Posters\" />
   </ItemGroup>
 
   <ItemGroup>
