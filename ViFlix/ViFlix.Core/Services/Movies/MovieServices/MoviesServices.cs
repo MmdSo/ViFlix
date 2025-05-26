@@ -21,10 +21,12 @@ namespace ViFlix.Core.Services.Movies.MovieServices
         private readonly IMapper _mapper;
         private readonly ILanguagesServices _language;
         private readonly IGanreServices _ganres;
-        public MoviesServices(AppDbContext context , IMapper mapper) : base(context)
+        public MoviesServices(AppDbContext context , IMapper mapper , IGanreServices ganres , ILanguagesServices language) : base(context)
         {
             _context = context;
             _mapper = mapper;
+            _ganres = ganres;
+            _language = language;
         }
 
         public async Task<long> AddMovies(MovieViewModel movie, IFormFile MImg)
@@ -102,22 +104,32 @@ namespace ViFlix.Core.Services.Movies.MovieServices
 
         public List<MovieViewModel> GetMovieByLanguageId(long id)
         {
-            throw new NotImplementedException();
+            var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().Where(p => p.LanguageId == id)).ToList();
+            return movie;
         }
 
-        public Task<IEnumerable<MovieViewModel>> GetMoviesByTitleAsync(string? title)
+        public async Task<IEnumerable<MovieViewModel>> GetMoviesByTitleAsync(string? title)
         {
-            throw new NotImplementedException();
+            var mo = GetAllMovies().Where(p => p.Title.ToLower().Contains(title.ToLower()));
+
+            foreach (var item in mo)
+            {
+                item.GanreTitle = _ganres.GetGanresById(item.GanreId).Title;
+                item.LanguageTitle = _language.GetLanguageById(item.LanguageId).Title;
+            }
+            return mo;
         }
 
         public List<MovieViewModel> GetNewMovie()
         {
-            throw new NotImplementedException();
+            var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().OrderBy(p => p.DateCreated) ).ToList();
+            return movie;
         }
 
         public List<MovieViewModel> GetOldMovie()
         {
-            throw new NotImplementedException();
+            var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().OrderBy(p => p.DateCreated)).ToList();
+            return movie;
         }
     }
 }

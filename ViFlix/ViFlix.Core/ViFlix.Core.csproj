@@ -35,7 +35,6 @@
   <ItemGroup>
     <Folder Include="Services\Movies\SerieServices\" />
     <Folder Include="Services\Movies\SeassonServices\" />
-    <Folder Include="Services\Movies\ReviewServices\" />
   </ItemGroup>
 
 </Project>

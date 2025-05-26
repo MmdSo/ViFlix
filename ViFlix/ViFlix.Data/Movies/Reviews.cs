@@ -14,6 +14,7 @@ namespace ViFlix.Data.Movies
         public string Comment { get; set; }
         public long UserId { get; set; }
         public long MovieId { get; set; }
+        public bool IsApproved { get; set; }
 
         #region Relations
         [ForeignKey("UserId")]

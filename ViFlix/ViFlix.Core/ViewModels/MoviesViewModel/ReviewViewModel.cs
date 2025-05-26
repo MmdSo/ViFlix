@@ -12,5 +12,6 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public string Comment { get; set; }
         public long UserId { get; set; }
         public long MovieId { get; set; }
+        public bool IsApproved { get; set; }
     }
 }
