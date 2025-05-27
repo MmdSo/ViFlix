@@ -4,6 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using ViFlix.Core.Services.Movies.Ganereservices;
+using ViFlix.Core.Services.Movies.LanguageServices;
+using ViFlix.Core.Services.Movies.MovieServices;
+using ViFlix.Core.Services.Movies.ReviewServices;
+using ViFlix.Core.Services.Movies.SeassonServices;
+using ViFlix.Core.Services.Movies.SerieServices;
 using ViFlix.Core.Services.User.PermissionsServices;
 using ViFlix.Core.Services.User.RolesServices;
 using ViFlix.Core.Services.User.UserServices;
@@ -127,6 +133,13 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRoleServices, RoleServices>();
 builder.Services.AddTransient<IPermissionServices, PermissionServices>();
 
+
+builder.Services.AddTransient<IGanreServices, GaneresServices>();
+builder.Services.AddTransient<ILanguagesServices, LanguagesServices>();
+builder.Services.AddTransient<IMoviesServices , MoviesServices>();
+builder.Services.AddTransient<IReviewsServices , ReviwsServices>();
+builder.Services.AddTransient<ISeasonServices , SeasonsServices>();
+builder.Services.AddTransient<ISeriesServices , SeriesServices>();
 
 var app = builder.Build();
 

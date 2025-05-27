@@ -105,7 +105,7 @@ namespace ViFlix.Core.Services.Movies.SerieServices
         public List<SeriesViewModel> GetSeriesByGenreId(long id)
         {
             var movie = _mapper.Map<IEnumerable<Series>, IEnumerable<SeriesViewModel>>(GetAll().Where(p => p.GanreId == id)).ToList();
-            return movie; ;
+            return movie; 
         }
 
         public SeriesViewModel GetSeriesById(long id)
