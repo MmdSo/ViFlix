@@ -141,6 +141,8 @@ builder.Services.AddTransient<IReviewsServices , ReviwsServices>();
 builder.Services.AddTransient<ISeasonServices , SeasonsServices>();
 builder.Services.AddTransient<ISeriesServices , SeriesServices>();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

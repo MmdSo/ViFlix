@@ -19,10 +19,10 @@ namespace ViFlix.Data.Subscription
 
         #region Relation 
         [ForeignKey("UserId")]
-        public SiteUsers user { get; set; }
+        public SiteUsers User { get; set; }
 
         [ForeignKey("PlanId")]
-        public SubscriptionPlan plan { get; set; }
+        public SubscriptionPlan Plan { get; set; }
         #endregion
     }
 }

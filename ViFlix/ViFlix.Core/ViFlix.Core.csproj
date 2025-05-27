@@ -33,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\Movies\SerieServices\" />
-    <Folder Include="Services\Movies\SeassonServices\" />
+    <Folder Include="Services\Subscription\UserSubscriptionService\" />
+    <Folder Include="Services\Subscription\SubscriptionPlanService\" />
   </ItemGroup>
 
 </Project>

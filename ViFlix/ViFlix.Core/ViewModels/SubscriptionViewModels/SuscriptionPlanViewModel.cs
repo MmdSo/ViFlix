@@ -12,7 +12,7 @@ namespace ViFlix.Core.ViewModels.SubscriptionViewModels
         public string PlanName { get; set; }
         public string Description { get; set; }
         public Decimal Price { get; set; }
-        public DateTime DurationDays { get; set; }
+        public long DurationDays { get; set; }
         public bool IsActive { get; set; }
     }
 }
