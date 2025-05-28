@@ -10,10 +10,13 @@ using ViFlix.Core.Services.Movies.MovieServices;
 using ViFlix.Core.Services.Movies.ReviewServices;
 using ViFlix.Core.Services.Movies.SeassonServices;
 using ViFlix.Core.Services.Movies.SerieServices;
+using ViFlix.Core.Services.Subscription.SubscriptionPlanService;
+using ViFlix.Core.Services.Subscription.UserSubscriptionService;
 using ViFlix.Core.Services.User.PermissionsServices;
 using ViFlix.Core.Services.User.RolesServices;
 using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Data.Repository;
+using ViFlix.Data.Subscription;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -133,7 +136,6 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRoleServices, RoleServices>();
 builder.Services.AddTransient<IPermissionServices, PermissionServices>();
 
-
 builder.Services.AddTransient<IGanreServices, GaneresServices>();
 builder.Services.AddTransient<ILanguagesServices, LanguagesServices>();
 builder.Services.AddTransient<IMoviesServices , MoviesServices>();
@@ -141,7 +143,8 @@ builder.Services.AddTransient<IReviewsServices , ReviwsServices>();
 builder.Services.AddTransient<ISeasonServices , SeasonsServices>();
 builder.Services.AddTransient<ISeriesServices , SeriesServices>();
 
-
+builder.Services.AddTransient<IsubscriptionPlanServices , SubscriptionPlanServices>();
+builder.Services.AddTransient<IUserSubscriptionServices , UserSubscriptionServices>();
 
 var app = builder.Build();
 
