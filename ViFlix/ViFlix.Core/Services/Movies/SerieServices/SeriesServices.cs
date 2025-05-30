@@ -124,9 +124,9 @@ namespace ViFlix.Core.Services.Movies.SerieServices
             return movie;
         }
 
-        public List<SeriesViewModel> GetSeriesBySeasonsId(long id)
+        public List<SeriesViewModel> GetSeasonsBySeriesId(long SeriesId)
         {
-            var movie = _mapper.Map<IEnumerable<Series>, IEnumerable<SeriesViewModel>>(GetAll().Where(p => p.SeasonsId == id)).ToList();
+            var movie = _mapper.Map<IEnumerable<Series>, IEnumerable<SeriesViewModel>>(GetAll().Where(p => p.Id == SeriesId)).ToList();
             return movie;
         }
 

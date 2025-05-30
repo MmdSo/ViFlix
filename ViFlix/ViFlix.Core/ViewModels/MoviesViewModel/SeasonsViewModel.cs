@@ -14,5 +14,7 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public long SeriesId { get; set; }
         public int Episodes { get; set; }
         public Series series { get; set; }
+        public string EpisodeUrl { get; set; } 
+        public long SeasonId { get; set; }
     }
 }

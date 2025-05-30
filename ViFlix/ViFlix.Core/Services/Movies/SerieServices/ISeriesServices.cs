@@ -15,7 +15,7 @@ namespace ViFlix.Core.Services.Movies.SerieServices
         IEnumerable<SeriesViewModel> GetAllSeries();
         List<SeriesViewModel> GetSeriesByGenreId(long id);
         List<SeriesViewModel> GetSeriesByLanguageId(long id);
-        List<SeriesViewModel> GetSeriesBySeasonsId(long id);
+        List<SeriesViewModel> GetSeasonsBySeriesId(long SeriesId);
         Task<long> AddSeries(SeriesViewModel series, IFormFile MImg);
         Task EditSeries(SeriesViewModel series, IFormFile MImg);
         Task DeleteSeries(long Id);
