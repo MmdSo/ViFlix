@@ -22,5 +22,6 @@ namespace ViFlix.Core.Services.Movies.MovieServices
         MovieViewModel GetMovieById(long id);
         List<MovieViewModel> GetNewMovie();
         List<MovieViewModel> GetOldMovie();
+        MovieViewModel GetDownloadLinksById(long id);
     }
 }

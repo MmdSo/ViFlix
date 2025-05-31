@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ViFlix.Core.Services.Movies.DownloadLinks;
 using ViFlix.Core.Services.Movies.Ganereservices;
 using ViFlix.Core.Services.Movies.LanguageServices;
 using ViFlix.Core.Services.Movies.MovieServices;
@@ -44,6 +45,7 @@ namespace ViFlix.Controllers
                 return Ok(movie);
         }
 
+        
         [HttpPost]
         public long AddMovieFromApi(long Id)
         {
@@ -157,6 +159,102 @@ namespace ViFlix.Controllers
             movieList = _movieServices.GetAllMovies().ToList();
             return movieList;
         }
+
+        [HttpGet("GetLinksByMovieId/{id}")]
+        public IActionResult GetLinksByMovieId(long id)
+        {
+            var movie = _movieServices.GetDownloadLinksById(id);
+            return Ok(movie);
+        }
+    }
+    #endregion
+
+    #region downloadLinks
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DownloadLinkApiController : ControllerBase
+    {
+        private readonly IDownloadLinksServices _LinkServices;
+
+        public DownloadLinkApiController(IDownloadLinksServices LinkServices)
+        {
+            _LinkServices = LinkServices;
+        }
+
+        public List<DownloadLinksViewModel> LinkList { get; set; }
+
+        [HttpGet]
+        public List<DownloadLinksViewModel> GetAllLinks()
+        {
+            LinkList = _LinkServices.GetAllDownloadLinks().ToList();
+            return LinkList;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<DownloadLinksViewModel> GetLinkById(long id)
+        {
+            var link = _LinkServices.GetLinksById(id);
+            if (link == null)
+                return NotFound(link);
+            else
+                return Ok(link);
+        }
+
+        [HttpPost]
+        public long AddLinksFromApi(long id)
+        {
+            return id;
+        }
+
+        [HttpPost("AddLinks")]
+        public async Task<long> AddLinks([FromForm] DownloadLinksViewModel link)
+        {
+            return await _LinkServices.AddDownloadLinkAsync(link);
+        }
+
+        [HttpPut("EditLinks")]
+        public async Task<IActionResult> EditLinks([FromForm] DownloadLinksViewModel link, long id)
+        {
+            var existLink = _LinkServices.GetLinksById(id);
+            if (existLink == null)
+            {
+                return NotFound("Links not found!");
+            }
+
+            existLink.Quality = link.Quality;
+            existLink.Url = link.Url;
+            
+
+            await _LinkServices.EditDownloadLinkAsync(existLink);
+
+            return Ok();
+        }
+
+        [HttpDelete("DeleteLink")]
+        public async Task<IActionResult> DeleteLink(long id)
+        {
+            var link = _LinkServices.GetLinksById(id);
+
+            if (link == null)
+            {
+                return NotFound(new { message = "Not found !" });
+            }
+
+            await _LinkServices.DeleteDownloadLinkAsync(id);
+
+            return Ok();
+        }
+
+        [HttpGet("GetLinksBymovieId")]
+        public async Task<IActionResult> GetLinksBymovieId(long MovieId)
+        {
+            var movie = _LinkServices.GetLinksByMovieId(MovieId);
+            if(movie == null)
+            {
+                return NotFound("Movie id dosnt exist");
+            }
+            return Ok(movie);
+        }
     }
     #endregion
 
@@ -200,13 +298,13 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost("AddGenre")]
-        public async Task<long> AddGenre(GanresViewModel genre)
+        public async Task<long> AddGenre([FromForm]GanresViewModel genre)
         {
             return await _genreServices.AddGanres(genre);
         }
 
         [HttpPut("EditGenres")]
-        public async Task<IActionResult> EditGenres(GanresViewModel genre, long id)
+        public async Task<IActionResult> EditGenres([FromForm]GanresViewModel genre, long id)
         {
             var existGenre = _genreServices.GetGanresById(id);
             if (existGenre == null)
@@ -278,13 +376,13 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost("AddLanguage")]
-        public async Task<long> AddLanguage(LanguageViewModel language)
+        public async Task<long> AddLanguage([FromForm]LanguageViewModel language)
         {
             return await _languageServices.AddLanguage(language);
         }
 
         [HttpPut("EditLanguage")]
-        public async Task<IActionResult> EditLanguage(LanguageViewModel language, long id)
+        public async Task<IActionResult> EditLanguage([FromForm] LanguageViewModel language, long id)
         {
             var existLanguage = _languageServices.GetLanguageById(id);
             if (existLanguage == null)
@@ -598,6 +696,7 @@ namespace ViFlix.Controllers
 
         public List<SeasonsViewModel> seasonList { get; set; }
 
+        [HttpGet]
         public List<SeasonsViewModel> GetAllSeasons()
         {
             seasonList = _seasonServices.GetAllSeasons().ToList();

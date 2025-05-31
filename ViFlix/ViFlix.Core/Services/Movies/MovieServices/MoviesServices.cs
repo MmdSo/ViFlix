@@ -131,5 +131,17 @@ namespace ViFlix.Core.Services.Movies.MovieServices
             var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().OrderBy(p => p.DateCreated)).ToList();
             return movie;
         }
+
+        public MovieViewModel GetDownloadLinksById(long id)
+        {
+            var movieEntity = GetAll().FirstOrDefault(m => m.Id == id);
+            var movieVm = _mapper.Map<Movie, MovieViewModel>(movieEntity);
+
+            
+            var downloadLinks = _context.DownloadLinks.Where(dl => dl.MovieId == id).ToList(); 
+            movieVm.DownloadLinks = _mapper.Map<List<DownloadLink>, List<DownloadLinksViewModel>>(downloadLinks);
+
+            return movieVm;
+        }
     }
 }

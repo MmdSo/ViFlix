@@ -32,9 +32,4 @@
     <ProjectReference Include="..\ViFlix.Data\ViFlix.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Subscription\UserSubscriptionService\" />
-    <Folder Include="Services\Subscription\SubscriptionPlanService\" />
-  </ItemGroup>
-
 </Project>

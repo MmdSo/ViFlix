@@ -1,0 +1,72 @@
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.pdb
+*.opendb
+*.log
+*.docstates
+*.tlog
+*.cache
+*.bak
+*.sbr
+*.bsc
+*.map
+*.obj
+*.idb
+*.pch
+*.ipch
+*.testsettings
+*.vspscc
+*.vssscc
+*.vsp
+*.vspx
+*.sln.docstates
+
+# Binaries and object files
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*/bin/
+*/obj/
+*/[Bb]in/
+*/[Oo]bj/
+build/
+dist/
+install/
+
+# Rider
+.idea/
+
+# Package files
+*.nupkg
+*.snupkg
+*.appx
+*.msi
+*.msp
+*.apk
+*.xap
+*.zip
+
+# Visual Studio Code
+.vscode/
+
+# Resharper
+*.resharper
+*.DotSettings
+
+# npm/node
+node_modules/
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet
+packages/
+*.nuget.log
+# End of default .gitignore

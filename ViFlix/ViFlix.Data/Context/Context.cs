@@ -27,6 +27,7 @@ namespace ViFlix.Data.Context
         public DbSet<Ganres> Ganres { get; set; }
         public DbSet<Language> Language { get; set; }
         public DbSet<Movie> Movie { get; set; }
+        public DbSet<DownloadLink> DownloadLinks { get; set; }
         public DbSet<MovieGanres> MovieGanres { get; set; }
         public DbSet<Reviews> Reviews { get; set; }
         public DbSet<Seasons> Seasons { get; set; }

@@ -26,13 +26,13 @@ namespace ViFlix.Core.Services.Movies.Ganereservices
 
         public async Task DeleteGanres(long id)
         {
-            GanresViewModel brand = GetGanresById(id);
+            GanresViewModel ganre = GetGanresById(id);
 
-            var ba = _mapper.Map<GanresViewModel, Ganres>(brand);
+            var ge = _mapper.Map<GanresViewModel, Ganres>(ganre);
 
-            ba.IsDelete = true;
+            ge.IsDelete = true;
 
-            EditEntity(ba);
+            EditEntity(ge);
             await SaveChanges();
         }
 

@@ -12,13 +12,17 @@ namespace ViFlix.Data.Movies
         public string Title { get; set; }
         public string Description { get; set; }
         public string? Poster { get; set; }  
-        public DateTime ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; }
         public bool IsCompleted { get; set; } 
         public string? Link { get; set; }
         public string? Trailer { get; set; }
         public long? GanreId { get; set; }
         public long? LanguageId { get; set; }
         public long? SeasonsId { get; set; }
+        public string? Cast { get; set; }
+        public string? Cuntry { get; set; }
+        public string? Director { get; set; }
+        public bool? IsDubed { get; set; }
 
         #region Relations
         public List<Reviews> reviews { get; set; }
