@@ -143,5 +143,17 @@ namespace ViFlix.Core.Services.Movies.MovieServices
 
             return movieVm;
         }
+
+        public List<MovieViewModel> GetMovieByActorsId(long id)
+        {
+            var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().Where(p => p.ActorsId == id)).ToList();
+            return movie;
+        }
+
+        public List<MovieViewModel> GetMovieByDirectorId(long id)
+        {
+            var movie = _mapper.Map<IEnumerable<Movie>, IEnumerable<MovieViewModel>>(GetAll().Where(p => p.DirectorId == id)).ToList();
+            return movie;
+        }
     }
 }

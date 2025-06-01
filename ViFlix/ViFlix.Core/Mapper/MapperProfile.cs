@@ -62,6 +62,15 @@ namespace ViFlix.Core.Mapper
             CreateMap<Ganres, GanresViewModel>();
             CreateMap<GanresViewModel, Ganres>();
 
+            CreateMap<Actors, ActorsViewModel>();
+            CreateMap<ActorsViewModel, Actors>();
+
+            CreateMap<Director, DirectorViewModel>();
+            CreateMap<DirectorViewModel, Director>();
+
+            CreateMap<DownloadLink, DownloadLinksViewModel>();
+            CreateMap<DownloadLinksViewModel, DownloadLink>();
+
             CreateMap<Language, LanguageViewModel>();
             CreateMap<LanguageViewModel, Language>();
 

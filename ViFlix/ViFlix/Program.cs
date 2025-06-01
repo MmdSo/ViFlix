@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using ViFlix.Core.Services.Movies.ActorServices;
+using ViFlix.Core.Services.Movies.DirectorServices;
 using ViFlix.Core.Services.Movies.DownloadLinks;
 using ViFlix.Core.Services.Movies.DownloadLinksServices;
 using ViFlix.Core.Services.Movies.Ganereservices;
@@ -145,6 +147,8 @@ builder.Services.AddTransient<IDownloadLinksServices, DownloadLinkServices>();
 builder.Services.AddTransient<IReviewsServices , ReviwsServices>();
 builder.Services.AddTransient<ISeasonServices , SeasonsServices>();
 builder.Services.AddTransient<ISeriesServices , SeriesServices>();
+builder.Services.AddTransient<IActorsServices , ActorsServices>();
+builder.Services.AddTransient<IDirectorsServices , DirectorsServices>();
 
 builder.Services.AddTransient<IsubscriptionPlanServices , SubscriptionPlanServices>();
 builder.Services.AddTransient<IUserSubscriptionServices , UserSubscriptionServices>();

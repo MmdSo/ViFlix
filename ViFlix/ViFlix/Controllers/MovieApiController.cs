@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ViFlix.Core.Services.Movies.ActorServices;
+using ViFlix.Core.Services.Movies.DirectorServices;
 using ViFlix.Core.Services.Movies.DownloadLinks;
 using ViFlix.Core.Services.Movies.Ganereservices;
 using ViFlix.Core.Services.Movies.LanguageServices;
@@ -767,6 +769,158 @@ namespace ViFlix.Controllers
             var sea = _seasonServices.GetSeasonsBySeriesId(Id);
 
             return Ok(sea);
+        }
+    }
+    #endregion
+
+    #region Actors
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ActorsApiController : ControllerBase
+    {
+        public readonly IActorsServices _actorServices;
+
+        public ActorsApiController(IActorsServices actorServices)
+        {
+            _actorServices = actorServices;
+        }
+
+        public List<ActorsViewModel> ActorList { get; set; }
+
+        public List<ActorsViewModel> GetAllActors()
+        {
+            ActorList = _actorServices.GetAllActors().ToList();
+            return ActorList;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<ActorsViewModel> GetActorsByid(long id)
+        {
+            var actors = _actorServices.GetActorsById(id);
+            if (actors == null)
+                return NotFound();
+            else
+                return Ok(actors);
+        }
+
+        [HttpPost]
+        public long AddActorsFromApi(long id)
+        {
+            return id;
+        }
+
+        [HttpPost("AddActors")]
+        public async Task<long> AddActors(ActorsViewModel actor)
+        {
+            return await _actorServices.AddActors(actor);
+        }
+
+        [HttpPut("EditActors")]
+        public async Task<IActionResult> EditActors(ActorsViewModel actor, long id)
+        {
+            var existActor = _actorServices.GetActorsById(id);
+            if (existActor == null)
+            {
+                return NotFound("actors not found!");
+            }
+
+            existActor.ActorFullName = actor.ActorFullName;
+
+
+            await _actorServices.EditActors(existActor);
+
+            return Ok();
+        }
+
+        [HttpDelete("DeleteDirector")]
+        public async Task<IActionResult> DeleteDirector(long id)
+        {
+            var actor = _actorServices.GetActorsById(id);
+
+            if (actor == null)
+            {
+                return NotFound(new { message = "Not found !" });
+            }
+
+            await _actorServices.DeleteActors(id);
+
+            return Ok();
+        }
+    }
+    #endregion
+
+    #region Director
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DirectorApiController : ControllerBase
+    {
+        public readonly IDirectorsServices _directorServices;
+
+        public DirectorApiController(IDirectorsServices directorServices)
+        {
+            _directorServices = directorServices;
+        }
+
+        public List<DirectorViewModel> directorList { get; set; }
+
+        public List<DirectorViewModel> GetAllDirectors()
+        {
+            directorList = _directorServices.GetAllDirector().ToList();
+            return directorList;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<DirectorViewModel> GetDirectorsByid(long id)
+        {
+            var directors = _directorServices.GetDirectorById(id);
+            if (directors == null)
+                return NotFound();
+            else
+                return Ok(directors);
+        }
+
+        [HttpPost]
+        public long AddDirectorsFromApi(long id)
+        {
+            return id;
+        }
+
+        [HttpPost("AddDirectors")]
+        public async Task<long> AddDirectors(DirectorViewModel director)
+        {
+            return await _directorServices.AddDirector(director);
+        }
+
+        [HttpPut("EditDirector")]
+        public async Task<IActionResult> EditDirector(DirectorViewModel director, long id)
+        {
+            var existDirector = _directorServices.GetDirectorById(id);
+            if (existDirector == null)
+            {
+                return NotFound("actors not found!");
+            }
+
+            existDirector.DirectorName = director.DirectorName;
+
+
+            await _directorServices.EditDirector(existDirector);
+
+            return Ok();
+        }
+
+        [HttpDelete("DeleteDirector")]
+        public async Task<IActionResult> DeleteDirector(long id)
+        {
+            var director = _directorServices.GetDirectorById(id);
+
+            if (director == null)
+            {
+                return NotFound(new { message = "Not found !" });
+            }
+
+            await _directorServices.DeleteDirector(id);
+
+            return Ok();
         }
     }
     #endregion

@@ -15,6 +15,8 @@ namespace ViFlix.Core.Services.Movies.MovieServices
         IEnumerable<MovieViewModel> GetAllMovies();
         List<MovieViewModel> GetMovieByGenreId(long id);
         List<MovieViewModel> GetMovieByLanguageId(long id);
+        List<MovieViewModel> GetMovieByActorsId(long id);
+        List<MovieViewModel> GetMovieByDirectorId(long id);
         Task<long> AddMovies(MovieViewModel movie, IFormFile MImg);
         Task EditMovies(MovieViewModel movie, IFormFile MImg);
         Task DeleteMovies(long Id);
