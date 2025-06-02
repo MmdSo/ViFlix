@@ -84,7 +84,7 @@ namespace ViFlix.Controllers
             existMovie.ReleaseDate = movie.ReleaseDate;
             existMovie.Trailer = movie.Trailer;
             existMovie.Duration = movie.Duration;
-            existMovie.DownloadLink = movie.DownloadLink;
+            existMovie.DownloadLinks = movie.DownloadLinks;
             existMovie.LanguageId = movie.LanguageId;
 
 
@@ -145,6 +145,20 @@ namespace ViFlix.Controllers
         public async Task<IActionResult> GetMovieByLanguageId(long Id)
         {
             var movie = _movieServices.GetMovieByLanguageId(Id);
+            return Ok(movie);
+        }
+
+        [HttpGet("GetMovieByActorsId")]
+        public async Task<IActionResult> GetMovieByActorsId(long Id)
+        {
+            var movie = _movieServices.GetMovieByActorsId(Id);
+            return Ok(movie);
+        }
+
+        [HttpGet("GetMovieByDirectorId")]
+        public async Task<IActionResult> GetMovieByDirectorId(long Id)
+        {
+            var movie = _movieServices.GetMovieByDirectorId(Id);
             return Ok(movie);
         }
 
@@ -787,6 +801,7 @@ namespace ViFlix.Controllers
 
         public List<ActorsViewModel> ActorList { get; set; }
 
+        [HttpGet]
         public List<ActorsViewModel> GetAllActors()
         {
             ActorList = _actorServices.GetAllActors().ToList();
@@ -810,13 +825,13 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost("AddActors")]
-        public async Task<long> AddActors(ActorsViewModel actor)
+        public async Task<long> AddActors([FromForm]ActorsViewModel actor)
         {
             return await _actorServices.AddActors(actor);
         }
 
         [HttpPut("EditActors")]
-        public async Task<IActionResult> EditActors(ActorsViewModel actor, long id)
+        public async Task<IActionResult> EditActors([FromForm] ActorsViewModel actor, long id)
         {
             var existActor = _actorServices.GetActorsById(id);
             if (existActor == null)
@@ -863,6 +878,7 @@ namespace ViFlix.Controllers
 
         public List<DirectorViewModel> directorList { get; set; }
 
+        [HttpGet]
         public List<DirectorViewModel> GetAllDirectors()
         {
             directorList = _directorServices.GetAllDirector().ToList();
@@ -886,13 +902,13 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost("AddDirectors")]
-        public async Task<long> AddDirectors(DirectorViewModel director)
+        public async Task<long> AddDirectors([FromForm] DirectorViewModel director)
         {
             return await _directorServices.AddDirector(director);
         }
 
         [HttpPut("EditDirector")]
-        public async Task<IActionResult> EditDirector(DirectorViewModel director, long id)
+        public async Task<IActionResult> EditDirector([FromForm] DirectorViewModel director, long id)
         {
             var existDirector = _directorServices.GetDirectorById(id);
             if (existDirector == null)
