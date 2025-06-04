@@ -763,7 +763,7 @@ namespace ViFlix.Data.Migrations
             modelBuilder.Entity("ViFlix.Data.Movies.DownloadLink", b =>
                 {
                     b.HasOne("ViFlix.Data.Movies.Movie", "Movie")
-                        .WithMany()
+                        .WithMany("DownloadLinks")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -926,6 +926,8 @@ namespace ViFlix.Data.Migrations
 
             modelBuilder.Entity("ViFlix.Data.Movies.Movie", b =>
                 {
+                    b.Navigation("DownloadLinks");
+
                     b.Navigation("moviesGanres");
 
                     b.Navigation("review");

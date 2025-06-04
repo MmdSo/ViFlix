@@ -58,7 +58,7 @@ namespace ViFlix.Controllers
         public async Task<long> AddMovieFromApiBody([FromForm]MovieViewModel movie, IFormFile MImg)
         {
             string fileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(MImg.FileName);
-            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posts", fileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -84,12 +84,27 @@ namespace ViFlix.Controllers
             existMovie.ReleaseDate = movie.ReleaseDate;
             existMovie.Trailer = movie.Trailer;
             existMovie.Duration = movie.Duration;
-            existMovie.DownloadLinks = movie.DownloadLinks;
             existMovie.LanguageId = movie.LanguageId;
 
+           
+            existMovie.DownloadLinks.Clear();
+
+
+            if (movie.DownloadLinks != null && movie.DownloadLinks.Any())
+            {
+                foreach (var linkViewModel in movie.DownloadLinks)
+                {
+                    existMovie.DownloadLinks.Add(new DownloadLinksViewModel
+                    {
+                        Url = linkViewModel.Url,
+                        Quality = linkViewModel.Quality,
+                        
+                    });
+                }
+            }
 
             string fileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(MImg.FileName);
-            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Avatar", fileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -97,7 +112,7 @@ namespace ViFlix.Controllers
             }
 
 
-            existMovie.Poster = "/Images/Avatar" + fileName;
+            existMovie.Poster = "/Images/Posters" + fileName;
 
 
             await _movieServices.EditMovies(existMovie, MImg);
@@ -175,13 +190,6 @@ namespace ViFlix.Controllers
             movieList = _movieServices.GetAllMovies().ToList();
             return movieList;
         }
-
-        [HttpGet("GetLinksByMovieId/{id}")]
-        public IActionResult GetLinksByMovieId(long id)
-        {
-            var movie = _movieServices.GetDownloadLinksById(id);
-            return Ok(movie);
-        }
     }
     #endregion
 
@@ -214,18 +222,6 @@ namespace ViFlix.Controllers
                 return NotFound(link);
             else
                 return Ok(link);
-        }
-
-        [HttpPost]
-        public long AddLinksFromApi(long id)
-        {
-            return id;
-        }
-
-        [HttpPost("AddLinks")]
-        public async Task<long> AddLinks([FromForm] DownloadLinksViewModel link)
-        {
-            return await _LinkServices.AddDownloadLinkAsync(link);
         }
 
         [HttpPut("EditLinks")]

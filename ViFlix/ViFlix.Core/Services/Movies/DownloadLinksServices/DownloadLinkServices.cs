@@ -22,14 +22,6 @@ namespace ViFlix.Core.Services.Movies.DownloadLinksServices
             _mapper = mapper;
         }
 
-        public async Task<long> AddDownloadLinkAsync(DownloadLinksViewModel link)
-        {
-            var Ganre = _mapper.Map<DownloadLinksViewModel, DownloadLink>(link);
-            await AddEntity(Ganre);
-            _context.SaveChanges();
-            return link.Id;
-        }
-
         public async Task DeleteDownloadLinkAsync(long id)
         {
             DownloadLinksViewModel link = GetLinksById(id);

@@ -8,7 +8,6 @@ namespace ViFlix.Core.Services.Movies.DownloadLinks
     {
         IEnumerable<DownloadLinksViewModel> GetAllDownloadLinks();
         DownloadLinksViewModel GetLinksById(long? Id);
-        Task<long> AddDownloadLinkAsync(DownloadLinksViewModel link);
         Task EditDownloadLinkAsync(DownloadLinksViewModel link);
         Task DeleteDownloadLinkAsync(long id);
         List<DownloadLinksViewModel> GetLinksByMovieId(long movieId);

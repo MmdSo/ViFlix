@@ -7,7 +7,7 @@ using ViFlix.Core.ViewModels.BaseModels;
 
 namespace ViFlix.Core.ViewModels.MoviesViewModel
 {
-    public class DownloadLinksViewModel : BaseViewModels
+    public class DownloadLinksViewModel 
     {
         public string Quality { get; set; }
         public string Url { get; set; }

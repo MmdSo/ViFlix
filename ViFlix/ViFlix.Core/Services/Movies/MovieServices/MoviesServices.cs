@@ -43,10 +43,30 @@ namespace ViFlix.Core.Services.Movies.MovieServices
                 Tools.ImageConverter ImgResizer = new Tools.ImageConverter();
                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", MImg.FileName);
             }
-            var po = _mapper.Map<MovieViewModel, Movie>(movie);
-            await AddEntity(po);
+            var movieEntity = _mapper.Map<MovieViewModel, Movie>(movie);
+
+            if (movieEntity.DownloadLinks == null)
+            {
+                movieEntity.DownloadLinks = new List<DownloadLink>();
+            }
+
+            if (movie.DownloadLinks != null && movie.DownloadLinks.Any())
+            {
+                foreach (var linkViewModel in movie.DownloadLinks)
+                {
+                    movieEntity.DownloadLinks.Add(new DownloadLink
+                    {
+                        Url = linkViewModel.Url,
+                        Quality = linkViewModel.Quality,
+                        IsDelete = false 
+                    });
+                }
+            }
+
+            _context.Movie.Add(movieEntity);
+
             _context.SaveChanges();
-            return movie.Id;
+            return movieEntity.Id;
         }
 
         public async Task DeleteMovies(long Id)
@@ -75,6 +95,7 @@ namespace ViFlix.Core.Services.Movies.MovieServices
                 Tools.ImageConverter ImgResizer = new Tools.ImageConverter();
                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", MImg.FileName);
             }
+            
             var pO = _mapper.Map<MovieViewModel, Movie>(movie);
             EditEntity(pO);
             await SaveChanges();

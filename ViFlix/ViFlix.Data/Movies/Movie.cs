@@ -31,6 +31,7 @@ namespace ViFlix.Data.Movies
         public List<MovieGanres> moviesGanres { get; set; }
 
         public List<Reviews> review { get; set; }
+        public ICollection<DownloadLink> DownloadLinks { get; set; } = new List<DownloadLink>();
         #endregion
     }
 }
