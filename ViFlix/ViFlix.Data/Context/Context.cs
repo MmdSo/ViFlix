@@ -34,5 +34,35 @@ namespace ViFlix.Data.Context
         public DbSet<Reviews> Reviews { get; set; }
         public DbSet<Seasons> Seasons { get; set; }
         public DbSet<Series> Series { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            foreach(var Relation in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                Relation.DeleteBehavior = DeleteBehavior.NoAction;
+            }
+            builder.Entity<SiteUsers>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Roles>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Permissions>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<UserRoles>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<RolePermissions>().HasQueryFilter(e => !e.IsDelete);
+
+
+            builder.Entity<SubscriptionPlan>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<UserSubscription>().HasQueryFilter(e => !e.IsDelete);
+
+
+            builder.Entity<Ganres>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Actors>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Director>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Language>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Movie>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<DownloadLink>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<MovieGanres>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Reviews>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Seasons>().HasQueryFilter(e => !e.IsDelete);
+            builder.Entity<Series>().HasQueryFilter(e => !e.IsDelete);
+        }
     }
 }
