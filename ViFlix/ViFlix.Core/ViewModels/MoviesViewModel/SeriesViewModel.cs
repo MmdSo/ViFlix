@@ -17,13 +17,17 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public string? Link { get; set; }
         public string? Trailer { get; set; }
         public long? GanreId { get; set; }
-        public string? GanreTitle { get; set; }
-        public string? LanguageTitle { get; set; }
         public long? LanguageId { get; set; }
         public long? SeasonsId { get; set; }
-        public string? Cast { get; set; }
-        public string? Cuntry { get; set; }
-        public string? Director { get; set; }
+        public string? ActorsId { get; set; }
+        public string? LanguageTitle { get; set; }
+        public string? GanreTitle { get; set; }
+        public string? ActorsTitle { get; set; }
+        public string? DirectorTitle { get; set; }
+        public string? Country { get; set; }
+        public string? DirectorId { get; set; }
         public bool? IsDubed { get; set; }
+
+        public List<SeasonsViewModel>? Seasons { get; set; }
     }
 }

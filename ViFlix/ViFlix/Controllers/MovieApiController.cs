@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using ViFlix.Core.Services.Movies.ActorServices;
 using ViFlix.Core.Services.Movies.DirectorServices;
 using ViFlix.Core.Services.Movies.DownloadLinks;
@@ -427,6 +429,7 @@ namespace ViFlix.Controllers
     #endregion
 
     #region Review
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReviewApiController : ControllerBase
@@ -434,100 +437,74 @@ namespace ViFlix.Controllers
         private readonly IMapper _mapper;
         private readonly IReviewsServices _reviewServices;
 
-        public ReviewApiController(IMapper mapper , IReviewsServices reviewServices)
+        public ReviewApiController(IMapper mapper, IReviewsServices reviewServices)
         {
             _mapper = mapper;
             _reviewServices = reviewServices;
         }
 
-        public List<ReviewViewModel> reviewList { get; set; }
 
-        [HttpGet]
-        public List<ReviewViewModel> GetAllReviews()
+        [HttpGet("GetMovieReviews")]
+        public async Task<ActionResult<IEnumerable<DisplayReviewViewModel>>> GetMovieReviews(long movieId)
         {
-            reviewList = _reviewServices.GetAllReviews().ToList();
-            return reviewList;
+            var reviews = await _reviewServices.GetReviewsForMovieAsync(movieId);
+            return Ok(reviews);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ReviewViewModel> GetReviewById(long id)
+        [HttpGet("GetSeriesReviews")]
+        public async Task<ActionResult<IEnumerable<DisplayReviewViewModel>>> GetSeriesReviews(long seriesId)
         {
-            var rw = _reviewServices.GetReviwById(id);
-            if (rw == null)
-                return NotFound(rw);
-            else
-                return Ok(rw);
+            var reviews = await _reviewServices.GetReviewsForSeriesAsync(seriesId);
+            return Ok(reviews);
         }
 
-        [HttpPost]
-        public long AddReviewFromApi(long id)
+        [HttpPost("AddReview")]
+        [Authorize]
+        public async Task<IActionResult> AddReview([FromBody] CreateReviewViewModel viewModel)
         {
-            return id;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!long.TryParse(userIdString, out long userIdAsLong))
+            {
+                return Unauthorized("User not found!");
+            }
+
+            try
+            {
+                var createdReview = await _reviewServices.AddReviewAsync(viewModel, userIdAsLong);
+                return Ok(createdReview);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        [HttpPost("AddReviews")]
-        public async Task<long> AddReviews([FromForm] ReviewViewModel review)
+        [HttpPost("ApproveReview")]
+        public async Task<IActionResult> ApproveReview(long reviewId)
         {
-            return await _reviewServices.AddReview(review);
+            var success = await _reviewServices.ApproveReviewAsync(reviewId);
+            if (!success)
+            {
+                return NotFound("Dont find Any review");
+            }
+            return NoContent(); 
         }
 
         [HttpDelete("DeleteReview")]
-        public async Task<IActionResult> DeleteReview(long id, ReviewViewModel review)
+        public async Task<IActionResult> DeleteReview(long reviewId)
         {
-            var rw = _reviewServices.GetReviwById(id);
-
-            if (rw == null)
+            var success = await _reviewServices.DeleteReviewAsync(reviewId);
+            if (!success)
             {
-                return NotFound(new { message = "Not found !" });
+                return NotFound("Dont find any reviews!");
             }
-
-            _reviewServices.DeleteReview(review);
-
-            return Ok();
-        }
-
-        [HttpPost("ApproveReview/{id}")]
-        public IActionResult ApproveReview(long? id, bool IsApprove)
-        {
-            var rw = _reviewServices.ApprovedReview(id, IsApprove);
-
-            if (rw)
-            {
-                return Ok();
-            }
-            else
-            {
-                return BadRequest(new { message = "Error in validation ! please try again ." });
-            }
-        }
-
-        [HttpGet("GetAllMovieReviewByMovieId")]
-        public async Task<IActionResult> GetAllMovieReviewByMovieId(long id)
-        {
-            var movieId = _reviewServices.GetAllMovieReviewByMovieId(id);
-            if(movieId == null)
-            {
-                return NotFound("There is no movie with this Id.");
-            }
-            return Ok(movieId);
-        }
-
-        [HttpGet("GetReviewByMovieId/{id}")]
-        public async Task<IActionResult> GetReviewByMovieId(long id)
-        {
-            var movieId = _reviewServices.GetReviewByMovieId(id);
-            if (movieId == null)
-            {
-                return NotFound("There is no movie with this Id.");
-            }
-            return Ok(movieId);
-        }
-
-        [HttpPost("sendReview")]
-        public async Task<IActionResult> SendReview([FromForm]ReviewViewModel review)
-        {
-            var rw = _reviewServices.SendReview(review);
-            return Ok(rw);
+            return NoContent(); 
         }
     }
     #endregion
@@ -575,7 +552,7 @@ namespace ViFlix.Controllers
         public async Task<long> AddSerieFromApiBody([FromForm] SeriesViewModel serie, IFormFile SImg)
         {
             string fileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(SImg.FileName);
-            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posts", fileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -595,18 +572,37 @@ namespace ViFlix.Controllers
                 return NotFound("movie is not found !");
             }
 
-            existSerie.Trailer = serie.Trailer;
-            existSerie.Title = serie.Title;
-            existSerie.Description = serie.Description;
-            existSerie.ReleaseDate = serie.ReleaseDate;
-            existSerie.Link = serie.Link;
-            existSerie.SeasonsId = serie.SeasonsId;
+            existSerie.Country = serie.Country;
+            existSerie.ActorsId = serie.ActorsId;
             existSerie.GanreId = serie.GanreId;
             existSerie.LanguageId = serie.LanguageId;
+            existSerie.Description = serie.Description;
+            existSerie.DirectorId = serie.DirectorId;
+            existSerie.ReleaseDate = serie.ReleaseDate;
+            existSerie.Trailer = serie.Trailer;
+            existSerie.Title = serie.Title;
+            existSerie.Link = serie.Link;
+            existSerie.IsDubed = serie.IsDubed;
+
+            existSerie.Seasons.Clear();
+
+
+            if (serie.Seasons != null && serie.Seasons.Any())
+            {
+                foreach (var season in serie.Seasons)
+                {
+                    existSerie.Seasons.Add(new SeasonsViewModel
+                    {
+                        SeasonNumber = season.SeasonNumber,
+                        HostUrl = season.HostUrl,
+                        SeriesId = season.SeriesId
+                    });
+                }
+            }
 
 
             string fileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(SImg.FileName);
-            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Avatar", fileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", fileName);
 
             using (var stream = new FileStream(imagePath, FileMode.Create))
             {
@@ -614,7 +610,7 @@ namespace ViFlix.Controllers
             }
 
 
-            existSerie.Poster = "/Images/Avatar" + fileName;
+            existSerie.Poster = "/Images/Posters" + fileName;
 
 
             await _seriesServices.EditSeries(existSerie, SImg);
@@ -731,32 +727,24 @@ namespace ViFlix.Controllers
             return id;
         }
 
-        [HttpPost("AddSeason")]
-        public async Task<long> AddSeason(SeasonsViewModel season)
-        {
-            return await _seasonServices.AddSeason(season);
-        }
+        //[HttpPut("EditSeason")]
+        //public async Task<IActionResult> EditSeason(SeasonsViewModel season, long id)
+        //{
+        //    var existSeason = _seasonServices.GetSeasonById(id);
+        //    if (existSeason == null)
+        //    {
+        //        return NotFound("Brand not found!");
+        //    }
 
-        [HttpPut("EditSeason")]
-        public async Task<IActionResult> EditSeason(SeasonsViewModel season, long id)
-        {
-            var existSeason = _seasonServices.GetSeasonById(id);
-            if (existSeason == null)
-            {
-                return NotFound("Brand not found!");
-            }
-
-            existSeason.SeriesId = season.Id;
-            existSeason.SeasonNumber = season.SeasonNumber;
-            existSeason.Episodes = season.Episodes;
-            existSeason.EpisodeUrl = season.EpisodeUrl;
-            existSeason.SeriesId = existSeason.Id;
+        //    existSeason.SeriesId = season.Id;
+        //    existSeason.SeasonNumber = season.SeasonNumber;
+        //    existSeason.SeriesId = existSeason.Id;
 
 
-            await _seasonServices.EditSeason(existSeason);
+        //    await _seasonServices.EditSeason(existSeason);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
         [HttpDelete("DeleteSeasons")]
         public async Task<IActionResult> DeleteSeasons(long id)

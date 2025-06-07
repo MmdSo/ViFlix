@@ -47,10 +47,23 @@ namespace ViFlix.Core.Services.Movies.SerieServices
                 Tools.ImageConverter ImgResizer = new Tools.ImageConverter();
                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "Images/Posters", MImg.FileName);
             }
+
             var se = _mapper.Map<SeriesViewModel, Series>(series);
+
+
+            if (series.Seasons != null && series.Seasons.Any())
+            {
+                if (se.Seasons == null) se.Seasons = new List<Seasons>();
+                foreach (var seasonViewModel in series.Seasons)
+                {
+                    var seasonEntity = _mapper.Map<SeasonsViewModel, Seasons>(seasonViewModel);
+                    se.Seasons.Add(seasonEntity); 
+                }
+            }
+
             await AddEntity(se);
             _context.SaveChanges();
-            return series.Id;
+            return se.Id;
         }
 
         public async Task DeleteSeries(long Id)

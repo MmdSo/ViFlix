@@ -12,9 +12,8 @@ namespace ViFlix.Data.Movies
     {
         public int SeasonNumber { get; set; }
         public long SeriesId { get; set; }
-        public int Episodes { get; set; }
-        public string EpisodeUrl { get; set; }
-        public long SeasonId { get; set; }
+        public string? HostUrl { get; set; }
+        
 
         #region Relations
         [ForeignKey("SeriesId")]

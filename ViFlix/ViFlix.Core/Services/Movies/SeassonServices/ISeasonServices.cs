@@ -14,7 +14,6 @@ namespace ViFlix.Core.Services.Movies.SeassonServices
     {
         IEnumerable<SeasonsViewModel> GetAllSeasons();
         List<SeasonsViewModel> GetSeasonsBySeriesId(long seriesId);
-        Task<long> AddSeason(SeasonsViewModel season);
         Task EditSeason(SeasonsViewModel season);
         Task DeleteSeason(long id);
         SeasonsViewModel GetSeasonById(long id);

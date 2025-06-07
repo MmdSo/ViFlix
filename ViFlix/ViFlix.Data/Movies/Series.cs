@@ -19,15 +19,16 @@ namespace ViFlix.Data.Movies
         public long? GanreId { get; set; }
         public long? LanguageId { get; set; }
         public long? SeasonsId { get; set; }
-        public string? Cast { get; set; }
-        public string? Cuntry { get; set; }
-        public string? Director { get; set; }
+        public string? ActorsId { get; set; }
+        public string? Country { get; set; }
+        public string? DirectorId { get; set; }
         public bool? IsDubed { get; set; }
 
         #region Relations
-        public List<Reviews> reviews { get; set; }
+        public ICollection<Reviews> Reviews { get; set; } = new List<Reviews>();
         public List<Ganres> ganre { get; set; }
-        public List<Seasons> season { get; set; }
+        public List<Language> Language { get; set; }
+        public ICollection<Seasons> Seasons { get; set; } = new List<Seasons>();
 
         #endregion
     }

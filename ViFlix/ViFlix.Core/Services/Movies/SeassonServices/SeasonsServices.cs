@@ -22,14 +22,6 @@ namespace ViFlix.Core.Services.Movies.SeassonServices
             _mapper = mapper;
         }
 
-        public async Task<long> AddSeason(SeasonsViewModel season)
-        {
-            var se = _mapper.Map<SeasonsViewModel, Seasons>(season);
-            await AddEntity(se);
-            _context.SaveChanges();
-            return season.Id;
-        }
-
         public async Task DeleteSeason(long id)
         {
             SeasonsViewModel series = GetSeasonById(id);

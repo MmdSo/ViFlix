@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,60 +22,83 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             _mapper = mapper;
         }
 
-        public async Task<long> AddReview(ReviewViewModel review)
+        public async Task<DisplayReviewViewModel> AddReviewAsync(CreateReviewViewModel review, long userId)
         {
-            var rw = _mapper.Map<ReviewViewModel, Reviews>(review);
-            await AddEntity(rw);
-            await SaveChanges();
-            return rw.Id;
+            if (!review.MovieId.HasValue && !review.SeriesId.HasValue)
+            {
+                throw new ArgumentException("you should write a comment!");
+            }
+            var re = _mapper.Map<Reviews>(review);
+
+            re.UserId = userId;
+            re.CreatedAt = DateTime.UtcNow;
+            re.IsApproved = false;
+
+            await _context.Reviews.AddAsync(re);
+            await _context.SaveChangesAsync();
+
+            var newReviewWithUser = await _context.Reviews
+           .Include(r => r.users)
+           .SingleAsync(r => r.Id == review.Id);
+
+            return _mapper.Map<DisplayReviewViewModel>(newReviewWithUser);
         }
 
-        public bool ApprovedReview(long? id, bool isApproved)
+        public async Task<bool> ApproveReviewAsync(long reviewId)
         {
-            var rw = GetReviwById(id);
-            rw.IsApproved = isApproved;
-            EditReview(rw);
-            return rw.IsApproved;
+            var review = await _context.Reviews.FindAsync(reviewId);
+
+            if (review == null)
+            {
+                return false;
+            }
+
+            review.IsApproved = true;
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public void DeleteReview(ReviewViewModel review)
+        public async Task<bool> DeleteReviewAsync(long reviewId)
         {
-            throw new NotImplementedException();
+           
+            var review = await _context.Reviews.FindAsync(reviewId);
+
+            
+            if (review == null)
+            {
+                return false;
+            }
+
+            
+            _context.Reviews.Remove(review);
+
+            
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task EditReview(ReviewViewModel review)
+        public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsForMovieAsync(long movieId)
         {
-            review.IsDelete = true;
-            EditReview(review);
+            var reviews = await _context.Reviews.Include(r => r.users).Include(r => r.Replies).ThenInclude(reply => reply.users)
+                .Where(r => r.MovieId == movieId && r.IsApproved && r.ParentReviewId == null).OrderByDescending(r => r.CreatedAt).ToListAsync();
+
+            return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);
         }
 
-        public List<ReviewViewModel> GetAllMovieReviewByMovieId(long? id)
+        public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsForSeriesAsync(long seriesId)
         {
-            var rw = GetAllReviews().Where(p => p.MovieId == id && p.IsApproved == true).ToList();
-            return rw;
-        }
+            var reviews = await _context.Reviews
+            .Include(r => r.users)
+            .Include(r => r.Replies)
+                .ThenInclude(reply => reply.users)
+            .Where(r => r.SeriesId == seriesId && r.IsApproved && r.ParentReviewId == null)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
 
-        public IEnumerable<ReviewViewModel> GetAllReviews()
-        {
-            var rw = _mapper.Map<IEnumerable<Reviews>, IEnumerable<ReviewViewModel>>(GetAll().OrderBy(p => p.DateCreated));
-            return rw;
-        }
-
-        public ReviewViewModel GetReviewByMovieId(long? id)
-        {
-            var pd = _mapper.Map<Reviews,ReviewViewModel>(GetEntityById(id));
-            return pd;
-        }
-
-        public ReviewViewModel GetReviwById(long? id)
-        {
-            var pd = _mapper.Map<Reviews, ReviewViewModel>(GetEntityById(id));
-            return pd;
-        }
-
-        public async Task SendReview(ReviewViewModel review)
-        {
-            await AddReview(review);
+            return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);
         }
     }
 }

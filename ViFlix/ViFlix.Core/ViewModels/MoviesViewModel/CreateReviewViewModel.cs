@@ -7,11 +7,11 @@ using ViFlix.Core.ViewModels.BaseModels;
 
 namespace ViFlix.Core.ViewModels.MoviesViewModel
 {
-    public class ReviewViewModel : BaseViewModels
+    public class CreateReviewViewModel : BaseViewModels
     {
         public string Comment { get; set; }
-        public long UserId { get; set; }
-        public long MovieId { get; set; }
-        public bool IsApproved { get; set; }
+        public long? MovieId { get; set; }
+        public long? SeriesId { get; set; }
+        public long? ParentReviewId { get; set; }
     }
 }
