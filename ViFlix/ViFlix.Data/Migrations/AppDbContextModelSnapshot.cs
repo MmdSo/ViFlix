@@ -342,7 +342,7 @@ namespace ViFlix.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateCreated")
@@ -359,6 +359,9 @@ namespace ViFlix.Data.Migrations
 
                     b.Property<long?>("MovieId")
                         .IsRequired()
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("ParentId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("ParentReviewId")

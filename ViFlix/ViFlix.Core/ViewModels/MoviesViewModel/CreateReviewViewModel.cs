@@ -12,6 +12,6 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public string Comment { get; set; }
         public long? MovieId { get; set; }
         public long? SeriesId { get; set; }
-        public long? ParentReviewId { get; set; }
+        public long? ParentId { get; set; }
     }
 }

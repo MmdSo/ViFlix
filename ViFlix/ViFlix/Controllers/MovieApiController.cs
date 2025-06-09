@@ -460,7 +460,7 @@ namespace ViFlix.Controllers
 
         [HttpPost("AddReview")]
         [Authorize]
-        public async Task<IActionResult> AddReview([FromBody] CreateReviewViewModel viewModel)
+        public async Task<IActionResult> AddReview([FromForm] CreateReviewViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -474,15 +474,11 @@ namespace ViFlix.Controllers
                 return Unauthorized("User not found!");
             }
 
-            try
-            {
+            
                 var createdReview = await _reviewServices.AddReviewAsync(viewModel, userIdAsLong);
                 return Ok(createdReview);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            
+           
         }
 
         [HttpPost("ApproveReview")]

@@ -31,12 +31,20 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             var re = _mapper.Map<Reviews>(review);
 
             re.UserId = userId;
-            re.CreatedAt = DateTime.UtcNow;
+            re.CreateAt = DateTime.UtcNow;
             re.IsApproved = false;
 
             await _context.Reviews.AddAsync(re);
+            try { 
             await _context.SaveChangesAsync();
-
+            }
+            catch (DbUpdateException ex)
+            {
+                // وقتی برنامه به این نقطه رسید، روی ex بروید تا جزئیات را ببینید
+                // کلید مشکل در ex.InnerException است
+                Console.WriteLine(ex.InnerException?.Message); // برای مشاهده خطا در کنسول
+                throw;
+            }
             var newReviewWithUser = await _context.Reviews
            .Include(r => r.users)
            .SingleAsync(r => r.Id == review.Id);
@@ -83,7 +91,7 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
         public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsForMovieAsync(long movieId)
         {
             var reviews = await _context.Reviews.Include(r => r.users).Include(r => r.Replies).ThenInclude(reply => reply.users)
-                .Where(r => r.MovieId == movieId && r.IsApproved && r.ParentReviewId == null).OrderByDescending(r => r.CreatedAt).ToListAsync();
+                .Where(r => r.MovieId == movieId && r.IsApproved && r.ParentId == null).OrderByDescending(r => r.CreateAt).ToListAsync();
 
             return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);
         }
@@ -94,8 +102,8 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             .Include(r => r.users)
             .Include(r => r.Replies)
                 .ThenInclude(reply => reply.users)
-            .Where(r => r.SeriesId == seriesId && r.IsApproved && r.ParentReviewId == null)
-            .OrderByDescending(r => r.CreatedAt)
+            .Where(r => r.SeriesId == seriesId && r.IsApproved && r.ParentId == null)
+            .OrderByDescending(r => r.CreateAt)
             .ToListAsync();
 
             return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);

@@ -12,12 +12,12 @@ namespace ViFlix.Data.Movies
     public class Reviews : BaseEntitiies
     {
         public string Comment { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
         public long UserId { get; set; }
         public long? MovieId { get; set; }
         public long? SeriesId { get; set; }
         public bool IsApproved { get; set; }
-        public long? ParentReviewId { get; set; }
+        public long? ParentId { get; set; }
 
         #region Relations
         [ForeignKey("UserId")]
