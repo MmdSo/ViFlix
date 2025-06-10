@@ -297,7 +297,7 @@ namespace ViFlix.Controllers
             return id;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("AddRole")]
         public async Task<long> AddRole([FromForm]RoleViewModel role)
         {
@@ -348,7 +348,7 @@ namespace ViFlix.Controllers
             return Ok(roleId);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpPost("AddPermissionToRoleByApi")]
         public IActionResult AddRolePermissionByApi(long roleId, [FromQuery] List<long> permissions)
         {

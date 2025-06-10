@@ -42,6 +42,7 @@ namespace ViFlix.Core.Services.User.UserServices
 
         public async Task<long> AddUser(UserViewModel user )
         {
+            user.Password = PasswordHelper.EncodePasswordMd5(user.Password);
             var person = _mapper.Map<UserViewModel, SiteUsers>(user);
             await AddEntity(person);
             await SaveChanges();

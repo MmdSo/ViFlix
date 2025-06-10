@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Core.ViewModels.MoviesViewModel;
 using ViFlix.Data.Context;
 using ViFlix.Data.Movies;
@@ -16,10 +17,12 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public ReviwsServices(AppDbContext context, IMapper mapper) : base(context)
+        public readonly IUserService _userServices;
+        public ReviwsServices(AppDbContext context, IMapper mapper , IUserService userServices) : base(context)
         {
             _context = context;
             _mapper = mapper;
+            _userServices = userServices;
         }
 
         public async Task<DisplayReviewViewModel> AddReviewAsync(CreateReviewViewModel review, long userId)
@@ -34,20 +37,11 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             re.CreateAt = DateTime.UtcNow;
             re.IsApproved = false;
 
-            await _context.Reviews.AddAsync(re);
-            try { 
+            await _context.Reviews.AddAsync(re); 
             await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                // وقتی برنامه به این نقطه رسید، روی ex بروید تا جزئیات را ببینید
-                // کلید مشکل در ex.InnerException است
-                Console.WriteLine(ex.InnerException?.Message); // برای مشاهده خطا در کنسول
-                throw;
-            }
-            var newReviewWithUser = await _context.Reviews
-           .Include(r => r.users)
-           .SingleAsync(r => r.Id == review.Id);
+
+
+            var newReviewWithUser = _userServices.GetUserById(re.UserId);
 
             return _mapper.Map<DisplayReviewViewModel>(newReviewWithUser);
         }

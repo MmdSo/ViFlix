@@ -80,7 +80,7 @@ namespace ViFlix.Core.Mapper
             CreateMap<CreateReviewViewModel, Reviews>();
             CreateMap<Reviews, DisplayReviewViewModel>()
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.users.UserName))
-            .ForMember(dest => dest.UserAvatarUrl, opt => opt.MapFrom(src => src.users.avatar));
+            .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.users.avatar));
             CreateMap<DisplayReviewViewModel, Reviews>();
 
             CreateMap<Seasons, SeasonsViewModel>();

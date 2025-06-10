@@ -12,7 +12,7 @@ namespace ViFlix.Core.ViewModels.MoviesViewModel
         public string Comment { get; set; }
         public DateTime CreatedAt { get; set; }
         public string UserName { get; set; } 
-        public string? UserAvatarUrl { get; set; }
+        public string? Avatar { get; set; }
         public List<DisplayReviewViewModel> Replies { get; set; } = new List<DisplayReviewViewModel>();
 
     }
