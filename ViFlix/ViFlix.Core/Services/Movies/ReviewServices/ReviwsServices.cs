@@ -41,9 +41,16 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             await _context.SaveChangesAsync();
 
 
-            var newReviewWithUser = _userServices.GetUserById(re.UserId);
+            var displayModel = _mapper.Map<DisplayReviewViewModel>(re);
+            var user = _userServices.GetUserById(re.UserId);
 
-            return _mapper.Map<DisplayReviewViewModel>(newReviewWithUser);
+            if (user != null)
+            {
+                displayModel.UserName = user.UserName; 
+                displayModel.Avatar = user.avatar; 
+            }
+
+            return displayModel;
         }
 
         public async Task<bool> ApproveReviewAsync(long reviewId)

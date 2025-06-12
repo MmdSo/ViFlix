@@ -13,7 +13,7 @@ namespace ViFlix.Data.Movies
     {
         public string Comment { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
-        public long UserId { get; set; }
+        public long? UserId { get; set; }
         public long? MovieId { get; set; }
         public long? SeriesId { get; set; }
         public bool IsApproved { get; set; }
@@ -29,7 +29,7 @@ namespace ViFlix.Data.Movies
         [ForeignKey("SeriesId")]
         public Series series { get; set; }
 
-        [ForeignKey("ParentReviewId")]
+        [ForeignKey("ParentId")]
         public virtual Reviews? ParentReview { get; set; }
 
         public virtual ICollection<Reviews> Replies { get; set; } = new List<Reviews>();
