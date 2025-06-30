@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using ViFlix.Core.Services.Movies.ActorServices;
 using ViFlix.Core.Services.Movies.DirectorServices;
@@ -14,6 +15,7 @@ using ViFlix.Core.Services.Movies.SeassonServices;
 using ViFlix.Core.Services.Movies.SerieServices;
 using ViFlix.Core.Tools;
 using ViFlix.Core.ViewModels.MoviesViewModel;
+using ViFlix.Data.Context;
 
 namespace ViFlix.Controllers
 {
@@ -429,18 +431,20 @@ namespace ViFlix.Controllers
     #endregion
 
     #region Review
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReviewApiController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IReviewsServices _reviewServices;
+        private readonly AppDbContext _context;
 
-        public ReviewApiController(IMapper mapper, IReviewsServices reviewServices)
+        public ReviewApiController(IMapper mapper, IReviewsServices reviewServices , AppDbContext context)
         {
             _mapper = mapper;
             _reviewServices = reviewServices;
+            _context = context;
         }
 
 
@@ -448,6 +452,13 @@ namespace ViFlix.Controllers
         public async Task<ActionResult<IEnumerable<DisplayReviewViewModel>>> GetMovieReviews(long movieId)
         {
             var reviews = await _reviewServices.GetReviewsForMovieAsync(movieId);
+            return Ok(reviews);
+        }
+
+        [HttpGet("GetReviews")]
+        public async Task<ActionResult<IEnumerable<DisplayReviewViewModel>>> GetReviews()
+        {
+            var reviews = await _reviewServices.GetReviewsAsync();
             return Ok(reviews);
         }
 
@@ -482,14 +493,14 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost("ApproveReview")]
-        public async Task<IActionResult> ApproveReview(long reviewId)
+        public async Task<IActionResult> ApproveReview(long reviewId, bool isApprove)
         {
-            var success = await _reviewServices.ApproveReviewAsync(reviewId);
+            var success = await _reviewServices.ApproveReviewAsync(reviewId, isApprove);
+
             if (!success)
-            {
-                return NotFound("Dont find Any review");
-            }
-            return NoContent(); 
+                return NotFound("Review not found or failed to update.");
+
+            return NoContent();
         }
 
         [HttpDelete("DeleteReview")]
@@ -539,7 +550,7 @@ namespace ViFlix.Controllers
         }
 
         [HttpPost]
-        public long AddMovieFromApi(long Id)
+        public long AddSeriesFromApi(long Id)
         {
             return Id;
         }

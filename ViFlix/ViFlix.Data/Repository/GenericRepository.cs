@@ -60,6 +60,11 @@ namespace ViFlix.Data.Repository
             return _dbSet.SingleOrDefault<TEntity>(e => e.Id == Id);
         }
 
+        public TEntity GetEntityById(long Id)
+        {
+            return _dbSet.SingleOrDefault<TEntity>(e => e.Id == Id);
+        }
+
         public async Task<TEntity> GetEntityByIdAsync(long? Id)
         {
             return await _dbSet.SingleOrDefaultAsync<TEntity>(e => e.Id == Id);

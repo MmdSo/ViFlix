@@ -16,5 +16,7 @@ namespace ViFlix.Core.Services.Subscription.SubscriptionPlanService
         Task<long> AddPlan(SuscriptionPlanViewModel plan);
         Task EditPlans(SuscriptionPlanViewModel plan);
         Task DeletePlans(long planId);
+        IEnumerable<SuscriptionPlanViewModel> GetActivePlans();
+        bool CheckIfPlanExists(long id);
     }
 }

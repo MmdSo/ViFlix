@@ -53,18 +53,16 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
             return displayModel;
         }
 
-        public async Task<bool> ApproveReviewAsync(long reviewId)
+        public async Task<bool> ApproveReviewAsync(long reviewId, bool isApproved)
         {
-            var review = await _context.Reviews.FindAsync(reviewId);
-
+            var review = _context.Reviews.FirstOrDefault(r => r.Id == reviewId);
+            
             if (review == null)
-            {
                 return false;
-            }
 
-            review.IsApproved = true;
-
-            await _context.SaveChangesAsync();
+            review.IsApproved = isApproved;
+            var rev = _mapper.Map<DisplayReviewViewModel>(review);
+            await EditReview(rev);
 
             return true;
         }
@@ -92,7 +90,7 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
         public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsForMovieAsync(long movieId)
         {
             var reviews = await _context.Reviews.Include(r => r.users).Include(r => r.Replies).ThenInclude(reply => reply.users)
-                .Where(r => r.MovieId == movieId && r.IsApproved && r.ParentId == null).OrderByDescending(r => r.CreateAt).ToListAsync();
+                 .Where(r => r.MovieId == movieId  && r.ParentId == null).OrderByDescending(r => r.CreateAt).ToListAsync();
 
             return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);
         }
@@ -100,14 +98,34 @@ namespace ViFlix.Core.Services.Movies.ReviewServices
         public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsForSeriesAsync(long seriesId)
         {
             var reviews = await _context.Reviews
-            .Include(r => r.users)
-            .Include(r => r.Replies)
-                .ThenInclude(reply => reply.users)
-            .Where(r => r.SeriesId == seriesId && r.IsApproved && r.ParentId == null)
+            .Include(r => r.users).Include(r => r.Replies).ThenInclude(reply => reply.users)
+            .Where(r => r.SeriesId == seriesId  && r.ParentId == null)
             .OrderByDescending(r => r.CreateAt)
             .ToListAsync();
 
             return _mapper.Map<IEnumerable<DisplayReviewViewModel>>(reviews);
+        }
+
+        public DisplayReviewViewModel? GetReviewById(long id)
+        {
+            var entity = GetEntityById(id);
+            //if (entity == null) return null;
+
+            return _mapper.Map<Reviews, DisplayReviewViewModel>(entity);
+            //return _mapper.Map<Reviews, DisplayReviewViewModel>(entity);
+        }
+
+        public async Task<IEnumerable<DisplayReviewViewModel>> GetReviewsAsync()
+        {
+            var reviews = _mapper.Map<IEnumerable<Reviews>, IEnumerable<DisplayReviewViewModel>>(GetAll());
+            return reviews;
+        }
+
+        public async Task EditReview(DisplayReviewViewModel review)
+        {
+            var rev = _mapper.Map<DisplayReviewViewModel , Reviews>(review);
+            EditEntity(rev);
+            await SaveChanges();
         }
     }
 }

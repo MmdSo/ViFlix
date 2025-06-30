@@ -29,6 +29,11 @@ namespace ViFlix.Core.Services.Subscription.SubscriptionPlanService
             return plan.Id;
         }
 
+        public bool CheckIfPlanExists(long id)
+        {
+            return GetAll().Any(p => p.Id == id);
+        }
+
         public async Task DeletePlans(long planId)
         {
             SuscriptionPlanViewModel plan = GetPlanById(planId);
@@ -46,6 +51,12 @@ namespace ViFlix.Core.Services.Subscription.SubscriptionPlanService
             var sp = _mapper.Map<SuscriptionPlanViewModel, SubscriptionPlan>(plan);
             EditEntity(sp);
             await SaveChanges();
+        }
+
+        public IEnumerable<SuscriptionPlanViewModel> GetActivePlans()
+        {
+            var plan = _mapper.Map<IEnumerable<SubscriptionPlan> , IEnumerable<SuscriptionPlanViewModel>>(GetAll().Where(p => p.IsActive).ToList());
+            return plan;
         }
 
         public IEnumerable<SuscriptionPlanViewModel> GetAllPlans()

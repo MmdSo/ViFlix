@@ -24,15 +24,15 @@ namespace ViFlix.Data.Movies
         public SiteUsers users { get; set; }
 
         [ForeignKey("MovieId")]
-        public Movie movie { get; set; }
+        public Movie? movie { get; set; }
 
         [ForeignKey("SeriesId")]
-        public Series series { get; set; }
+        public Series? series { get; set; }
 
         [ForeignKey("ParentId")]
         public virtual Reviews? ParentReview { get; set; }
 
-        public virtual ICollection<Reviews> Replies { get; set; } = new List<Reviews>();
+        public virtual ICollection<Reviews> Replies { get; set; }
         #endregion
     }
 }

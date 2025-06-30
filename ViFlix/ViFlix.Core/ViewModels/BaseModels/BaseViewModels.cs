@@ -9,7 +9,7 @@ namespace ViFlix.Core.ViewModels.BaseModels
 {
     public class BaseViewModels
     {
-        
+
         [BindNever]
         public long Id { get; set; }
         [BindNever]
