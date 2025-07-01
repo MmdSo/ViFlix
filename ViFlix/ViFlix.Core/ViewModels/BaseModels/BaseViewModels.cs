@@ -13,9 +13,9 @@ namespace ViFlix.Core.ViewModels.BaseModels
         [BindNever]
         public long Id { get; set; }
         [BindNever]
-        public DateTime DataCreated { get; set; }
+        public DateTime DataCreated { get; set; } = DateTime.UtcNow;
         [BindNever]
-        public DateTime DataModified { get; set; }
+        public DateTime DataModified { get; set; } = DateTime.UtcNow;
         [BindNever]
         public bool IsDelete { get; set; }
     }

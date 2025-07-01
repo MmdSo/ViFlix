@@ -9,8 +9,8 @@ namespace ViFlix.Data.Context
     public class BaseEntitiies
     {
         public long Id { get; set; }
-        public DateTime DateCreated { get; set; }
-        public DateTime DateModified { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
         public bool IsDelete { get; set; }
     }
 }

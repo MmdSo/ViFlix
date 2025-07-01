@@ -325,7 +325,7 @@ namespace ViFlix.Controllers
             var existGenre = _genreServices.GetGanresById(id);
             if (existGenre == null)
             {
-                return NotFound("Brand not found!");
+                return NotFound("ganre not found!");
             }
 
             existGenre.Title = genre.Title;
