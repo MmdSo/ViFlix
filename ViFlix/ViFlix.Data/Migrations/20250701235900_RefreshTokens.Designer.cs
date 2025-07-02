@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViFlix.Data.Context;
 
@@ -11,9 +12,10 @@ using ViFlix.Data.Context;
 namespace ViFlix.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250701235900_RefreshTokens")]
+    partial class RefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,12 +75,7 @@ namespace ViFlix.Data.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("MovieId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Actors");
                 });
@@ -802,14 +799,6 @@ namespace ViFlix.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ViFlix.Data.Movies.Actors", b =>
-                {
-                    b.HasOne("ViFlix.Data.Movies.Movie", null)
-                        .WithMany("Actors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.NoAction);
-                });
-
             modelBuilder.Entity("ViFlix.Data.Movies.DownloadLink", b =>
                 {
                     b.HasOne("ViFlix.Data.Movies.Movie", "Movie")
@@ -1005,8 +994,6 @@ namespace ViFlix.Data.Migrations
 
             modelBuilder.Entity("ViFlix.Data.Movies.Movie", b =>
                 {
-                    b.Navigation("Actors");
-
                     b.Navigation("DownloadLinks");
 
                     b.Navigation("moviesGanres");

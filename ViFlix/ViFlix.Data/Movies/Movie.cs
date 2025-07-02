@@ -27,6 +27,7 @@ namespace ViFlix.Data.Movies
         #region Relations 
         public List<Language> language { get; set; }
         public List<Director> director { get; set; }
+        public List<Actors> Actors { get; set; }
 
         public List<MovieGanres> moviesGanres { get; set; }
 

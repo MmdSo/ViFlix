@@ -14,6 +14,7 @@ using ViFlix.Core.Services.Movies.MovieServices;
 using ViFlix.Core.Services.Movies.ReviewServices;
 using ViFlix.Core.Services.Movies.SeassonServices;
 using ViFlix.Core.Services.Movies.SerieServices;
+using ViFlix.Core.Services.RefreshTokens;
 using ViFlix.Core.Services.Subscription.SubscriptionPlanService;
 using ViFlix.Core.Services.Subscription.UserSubscriptionService;
 using ViFlix.Core.Services.User.PermissionsServices;
@@ -152,6 +153,8 @@ builder.Services.AddTransient<IDirectorsServices , DirectorsServices>();
 
 builder.Services.AddTransient<IsubscriptionPlanServices , SubscriptionPlanServices>();
 builder.Services.AddTransient<IUserSubscriptionServices , UserSubscriptionServices>();
+
+builder.Services.AddScoped<IRefreshTokenServices, RefreshTokenServices>();
 
 var app = builder.Build();
 

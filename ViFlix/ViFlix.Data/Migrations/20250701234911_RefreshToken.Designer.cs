@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ViFlix.Data.Context;
 
@@ -11,9 +12,10 @@ using ViFlix.Data.Context;
 namespace ViFlix.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250701234911_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,12 +75,7 @@ namespace ViFlix.Data.Migrations
                     b.Property<bool>("IsDelete")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("MovieId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Actors");
                 });
@@ -487,37 +484,6 @@ namespace ViFlix.Data.Migrations
                     b.ToTable("Series");
                 });
 
-            modelBuilder.Entity("ViFlix.Data.RefreshTokens.RefreshToken", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Revoked")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("RefreshToken");
-                });
-
             modelBuilder.Entity("ViFlix.Data.Subscription.SubscriptionPlan", b =>
                 {
                     b.Property<long>("Id")
@@ -802,14 +768,6 @@ namespace ViFlix.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ViFlix.Data.Movies.Actors", b =>
-                {
-                    b.HasOne("ViFlix.Data.Movies.Movie", null)
-                        .WithMany("Actors")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.NoAction);
-                });
-
             modelBuilder.Entity("ViFlix.Data.Movies.DownloadLink", b =>
                 {
                     b.HasOne("ViFlix.Data.Movies.Movie", "Movie")
@@ -917,17 +875,6 @@ namespace ViFlix.Data.Migrations
                     b.Navigation("serie");
                 });
 
-            modelBuilder.Entity("ViFlix.Data.RefreshTokens.RefreshToken", b =>
-                {
-                    b.HasOne("ViFlix.Data.Users.SiteUsers", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ViFlix.Data.Subscription.UserSubscription", b =>
                 {
                     b.HasOne("ViFlix.Data.Subscription.SubscriptionPlan", "Plan")
@@ -1005,8 +952,6 @@ namespace ViFlix.Data.Migrations
 
             modelBuilder.Entity("ViFlix.Data.Movies.Movie", b =>
                 {
-                    b.Navigation("Actors");
-
                     b.Navigation("DownloadLinks");
 
                     b.Navigation("moviesGanres");

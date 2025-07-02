@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViFlix.Core.ViewModels.MoviesViewModel;
+using ViFlix.Core.ViewModels.RefreshToken;
 using ViFlix.Core.ViewModels.SubscriptionViewModels;
 using ViFlix.Core.ViewModels.UsersViewModels;
 using ViFlix.Data.Movies;
+using ViFlix.Data.RefreshTokens;
 using ViFlix.Data.Subscription;
 using ViFlix.Data.Users;
 
@@ -89,6 +91,15 @@ namespace ViFlix.Core.Mapper
 
             CreateMap<Series, SeriesViewModel>();
             CreateMap<SeriesViewModel, Series>();
+            #endregion
+
+            #region TokenRefresh
+            CreateMap<RefreshToken, TokenResponseViewModel>();
+            CreateMap<TokenResponseViewModel , RefreshToken>();
+
+            CreateMap<RefreshToken, TokenRequestViewModel>();
+            CreateMap<TokenRequestViewModel, RefreshToken>();
+
             #endregion
         }
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ViFlix.Data.Movies;
+using ViFlix.Data.RefreshTokens;
 using ViFlix.Data.Subscription;
 using ViFlix.Data.Users;
 
@@ -35,6 +36,7 @@ namespace ViFlix.Data.Context
         public DbSet<Seasons> Seasons { get; set; }
         public DbSet<Series> Series { get; set; }
 
+        public DbSet<RefreshToken> RefreshToken { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
