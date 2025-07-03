@@ -18,7 +18,6 @@ F:\github\Viflix-site\ViFlix\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.gen
 F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ViFlix.Data.deps.json
 F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ViFlix.Data.runtimeconfig.json
 F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ViFlix.Data.dll
-F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ref\ViFlix.Data.dll
 F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ViFlix.Data.pdb
 F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.csproj.AssemblyReference.cache
 F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.GeneratedMSBuildEditorConfig.editorconfig
@@ -32,3 +31,4 @@ F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.dll
 F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ref\ViFlix.Data.dll
 F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.pdb
 F:\github\Viflix-site\ViFlix\ViFlix.Data\obj\Debug\net6.0\ViFlix.Data.genruntimeconfig.cache
+F:\github\Viflix-site\ViFlix\ViFlix.Data\bin\Debug\net6.0\ref\ViFlix.Data.dll

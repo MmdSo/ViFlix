@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using System.Text;
 using ViFlix.Core.Services.Movies.ActorServices;
 using ViFlix.Core.Services.Movies.DirectorServices;
@@ -24,6 +25,14 @@ using ViFlix.Data.Repository;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    // آدرس IP محلی رو دستی وارد کن، اینجوری همه چی شفافه
+//    serverOptions.Listen(IPAddress.Parse("192.168.1.1"), 5000); // ← آدرس آی‌پی لپ‌تاپ اولت
+//});
+
+
 
 // Add services to the container.
 
@@ -156,6 +165,16 @@ builder.Services.AddTransient<IUserSubscriptionServices , UserSubscriptionServic
 
 builder.Services.AddScoped<IRefreshTokenServices, RefreshTokenServices>();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAll", policy =>
+//    {
+//        policy.AllowAnyOrigin()
+//              .AllowAnyMethod()
+//              .AllowAnyHeader();
+//    });
+//});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -164,6 +183,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

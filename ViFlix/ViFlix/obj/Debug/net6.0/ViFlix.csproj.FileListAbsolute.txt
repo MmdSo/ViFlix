@@ -4,7 +4,6 @@ F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ViFlix.exe
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ViFlix.deps.json
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ViFlix.runtimeconfig.json
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ViFlix.dll
-F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ref\ViFlix.dll
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ViFlix.pdb
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\AutoMapper.dll
 F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\Humanizer.dll
@@ -93,8 +92,9 @@ F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.MvcApplicationPartsA
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\staticwebassets.build.json
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\staticwebassets.development.json
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\scopedcss\bundle\ViFlix.styles.css
-F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.csproj.CopyComplete
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.dll
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ref\ViFlix.dll
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.pdb
 F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.genruntimeconfig.cache
+F:\github\Viflix-site\ViFlix\ViFlix\bin\Debug\net6.0\ref\ViFlix.dll
+F:\github\Viflix-site\ViFlix\ViFlix\obj\Debug\net6.0\ViFlix.csproj.CopyComplete
