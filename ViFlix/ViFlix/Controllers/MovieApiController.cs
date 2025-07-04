@@ -267,7 +267,7 @@ namespace ViFlix.Controllers
             var movie = _LinkServices.GetLinksByMovieId(MovieId);
             if(movie == null)
             {
-                return NotFound("Movie id dosnt exist");
+                return NotFound("Link id dosnt exist");
             }
             return Ok(movie);
         }
@@ -403,7 +403,7 @@ namespace ViFlix.Controllers
             var existLanguage = _languageServices.GetLanguageById(id);
             if (existLanguage == null)
             {
-                return NotFound("Brand not found!");
+                return NotFound("Language not found!");
             }
 
             existLanguage.Title = language.Title;
@@ -904,7 +904,7 @@ namespace ViFlix.Controllers
             var existDirector = _directorServices.GetDirectorById(id);
             if (existDirector == null)
             {
-                return NotFound("actors not found!");
+                return NotFound("Directors not found!");
             }
 
             existDirector.DirectorName = director.DirectorName;
