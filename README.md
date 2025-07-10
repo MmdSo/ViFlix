@@ -1,26 +1,34 @@
-# 🛒 FirstShop
+# 🎬 ViFlix
 
 ## 🧾 Description
-FirstShop is an online shopping website built with ASP.NET Core and RESTful APIs. It includes user authentication, product listing, and order handling. Designed as a personal project to practice full-stack development with clean architecture and database integration.
+ViFlix is a movie streaming website backend built with ASP.NET Core and Web API. The project allows admins to manage movies, genres, and download links, and it's structured to support future user-side features like watchlists and reviews.
+
+This is a portfolio project created entirely by me, aiming to simulate the backend of a real-world movie platform with scalable and modular design.
+
+---
 
 ## 🚀 Technologies Used
 - C#
 - ASP.NET Core Web API
-- HTML/CSS (using a template)
-- Java Script
-- SQL Server
 - Entity Framework Core
+- SQL Server
+
+---
 
 ## 🎯 Key Features
-- User registration and login
-- Product listing and detailed view
-- Cart functionality (optional)
-- Admin dashboard for managing products (if added later)
-- Responsive frontend using ready-made HTML/CSS template
-- Fully connected to database
+- Admin panel for managing movies, genres, and qualities
+- Support for multiple genres per movie
+- Database-integrated backend
+- Structured for future user-side features:
+  - Watchlist
+  - User reviews & ratings
+  - JWT Authentication
+- Separated hosting concept (media links can be served from another domain)
+
+---
 
 ## ⚙️ Getting Started
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/MmdSo/FirstShop-online-shop.git
+   git clone https://github.com/MmdSo/ViFlix.git
