@@ -3,18 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViFlix", "ViFlix\ViFlix.csproj", "{A01C4BAF-497F-4B2D-9330-8C61E005841F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViFlix", "ViFlix\ViFlix.csproj", "{A01C4BAF-497F-4B2D-9330-8C61E005841F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{454A736B-F6D1-4251-90D5-9BFB94B6057B} = {454A736B-F6D1-4251-90D5-9BFB94B6057B}
 		{6DE473D4-0AF2-47EB-99E3-27759E5B5195} = {6DE473D4-0AF2-47EB-99E3-27759E5B5195}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViFlix.Core", "ViFlix.Core\ViFlix.Core.csproj", "{6DE473D4-0AF2-47EB-99E3-27759E5B5195}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViFlix.Core", "ViFlix.Core\ViFlix.Core.csproj", "{6DE473D4-0AF2-47EB-99E3-27759E5B5195}"
 	ProjectSection(ProjectDependencies) = postProject
 		{454A736B-F6D1-4251-90D5-9BFB94B6057B} = {454A736B-F6D1-4251-90D5-9BFB94B6057B}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViFlix.Data", "ViFlix.Data\ViFlix.Data.csproj", "{454A736B-F6D1-4251-90D5-9BFB94B6057B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViFlix.Data", "ViFlix.Data\ViFlix.Data.csproj", "{454A736B-F6D1-4251-90D5-9BFB94B6057B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViflixUnitTests", "ViflixUnitTests\ViflixUnitTests.csproj", "{288C5C37-BBA6-4D52-ABC7-A26D19A3045A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +36,10 @@ Global
 		{454A736B-F6D1-4251-90D5-9BFB94B6057B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{454A736B-F6D1-4251-90D5-9BFB94B6057B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{454A736B-F6D1-4251-90D5-9BFB94B6057B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{288C5C37-BBA6-4D52-ABC7-A26D19A3045A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288C5C37-BBA6-4D52-ABC7-A26D19A3045A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288C5C37-BBA6-4D52-ABC7-A26D19A3045A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288C5C37-BBA6-4D52-ABC7-A26D19A3045A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

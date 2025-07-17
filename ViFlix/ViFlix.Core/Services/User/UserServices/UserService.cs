@@ -209,13 +209,18 @@ namespace ViFlix.Core.Services.User.UserServices
             AddRoleToUser(Roles, userId);
         }
         
+        //public bool UserNameExist(string username)
+        //{
+        //    var user = _mapper.Map<SiteUsers, UserViewModel>(GetAll().SingleOrDefault(u => u.UserName == username));
+        //    if (user == null)
+        //        return false;
+        //    else
+        //        return true;
+        //}
+
         public bool UserNameExist(string username)
         {
-            var user = _mapper.Map<SiteUsers, UserViewModel>(GetAll().SingleOrDefault(u => u.UserName == username));
-            if (user == null)
-                return false;
-            else
-                return true;
+            return _context.Users.Any(u => u.UserName == username);
         }
     }
 }
