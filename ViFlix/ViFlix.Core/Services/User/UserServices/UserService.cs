@@ -186,6 +186,11 @@ namespace ViFlix.Core.Services.User.UserServices
 
         public async Task<long> Register(RegisterViewModel register)
         {
+            if(_context.Users.Any(u => u.UserName == register.UserName))
+            {
+                return 0;
+            }
+
             register.Password = PasswordHelper.EncodePasswordMd5(register.Password);
             var user = _mapper.Map<RegisterViewModel, SiteUsers>(register);
 
