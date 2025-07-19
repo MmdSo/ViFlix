@@ -42,11 +42,14 @@ namespace ViFlix.Core.Services.User.UserServices
 
         public async Task<long> AddUser(UserViewModel user )
         {
+            if (_context.Users.Any(u => u.UserName == user.UserName || u.Email == user.Email))
+                return -1;
+
             user.Password = PasswordHelper.EncodePasswordMd5(user.Password);
             var person = _mapper.Map<UserViewModel, SiteUsers>(user);
             await AddEntity(person);
             await SaveChanges();
-            return user.Id;
+            return person.Id;
         }
 
         public async Task ChangeEmail(ChangeEmailViewModel Email, long userId)
@@ -110,14 +113,27 @@ namespace ViFlix.Core.Services.User.UserServices
             
 
             await SaveChanges();
+           
         }
 
-        public async Task EditUser(UserViewModel user)
+        public async Task<bool> EditUser(UserViewModel user)
         {
+            var existingUser = await _context.Users.FindAsync(user.Id);
+            if (existingUser == null)
+                return false;
+
             var person = _mapper.Map<UserViewModel, SiteUsers>(user);
             EditEntity(person);
             await SaveChanges();
+            return true;
         }
+
+        //public async Task EditUser(UserViewModel user)
+        //{
+        //    var person = _mapper.Map<UserViewModel, SiteUsers>(user);
+        //    EditEntity(person);
+        //    await SaveChanges();
+        //}
 
         public IEnumerable<UserViewModel> GetAllUsers()
         {

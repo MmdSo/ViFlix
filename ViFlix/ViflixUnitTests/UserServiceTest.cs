@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ViFlix.Core.Mapper;
 using ViFlix.Core.Services.User.UserServices;
 using ViFlix.Core.ViewModels.UsersViewModels;
 using ViFlix.Data.Context;
@@ -15,95 +16,75 @@ using Xunit;
 
 namespace ViflixUnitTests
 {
-    public class UserServiceTest
+    public class UserServiceTest : IDisposable
     {
-        
+        private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly UserService _userService;
+
+        public UserServiceTest()
+        {
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+
+            _context = new AppDbContext(options);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MapperProfile>();
+            });
+
+            _mapper = config.CreateMapper();
+            _userService = new UserService(_context, _mapper);
+        }
+
+        public void Dispose()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
+
         #region userNameExist
         [Fact]
         public void UserNameExist_WithExistUserTest_ReturnTrue()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "UserExistDb")
-                .Options;
-
-            using var context = new AppDbContext(options);
-            context.Users.Add(new SiteUsers
+            _context.Users.Add(new SiteUsers
             {
                 UserName = "mmd_sohrabi",
                 FirstName = "mmd",
                 LastName = "sohrabi",
                 Password = "123456",
-                
-            }) ;
-            context.SaveChanges();
+            });
+            _context.SaveChanges();
 
-            var mockMapper = new Mock<IMapper>();
+            var result = _userService.UserNameExist("mmd_sohrabi");
 
-            var service = new UserService(context, mockMapper.Object);
-
-            // Act
-            var result = service.UserNameExist("mmd_sohrabi");
-
-            // Assert
             Assert.True(result);
-            
         }
-
-
 
         [Fact]
         public void UserNameExist_WithNonExistingUser_ReturnsFalse()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-               .UseInMemoryDatabase(databaseName: "UserExistDb")
-               .Options;
-
-            using var context = new AppDbContext(options);
-            context.Users.Add(new SiteUsers
+            _context.Users.Add(new SiteUsers
             {
                 UserName = "mmd_sohrabi",
                 FirstName = "mmd",
                 LastName = "sohrabi",
                 Password = "123456",
-
             });
-            context.SaveChanges();
+            _context.SaveChanges();
 
-            var mockMapper = new Mock<IMapper>();
+            var result = _userService.UserNameExist("unknown");
 
-            var service = new UserService(context, mockMapper.Object);
-
-            // Act
-            var result = service.UserNameExist("unknown");
-
-            // Assert
             Assert.False(result);
         }
         #endregion
 
         #region Register
-
         [Fact]
         public async Task Register_WithUniqUserName_ReturnsTrue()
         {
-            //Arrange
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-               .UseInMemoryDatabase(databaseName: "RegisterUniqueTest")
-               .Options;
-
-            using var context = new AppDbContext(options);
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<RegisterViewModel, SiteUsers>();
-            });
-
-            var mapper = config.CreateMapper();
-
-            var userService = new UserService(context, mapper);
-
             var registerModel = new RegisterViewModel
             {
                 UserName = "mmdi",
@@ -114,44 +95,24 @@ namespace ViflixUnitTests
                 ConfirmPassword = "123456"
             };
 
-            //Act
-
-            var result =  await userService.Register(registerModel);
-
-            //Assert 
+            var result = await _userService.Register(registerModel);
 
             Assert.True(result > 0);
-            Assert.Single(context.Users);
-            Assert.Equal("mmdi", context.Users.First().UserName);
+            Assert.Single(_context.Users);
+            Assert.Equal("mmdi", _context.Users.First().UserName);
         }
-
 
         [Fact]
         public async Task Register_WithExistingUsername_ReturnsFalse()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "RegisterDuplicateTest")
-                .Options;
-
-            using var context = new AppDbContext(options);
-
-            context.Users.Add(new SiteUsers {
+            _context.Users.Add(new SiteUsers
+            {
                 UserName = "mmdi",
                 FirstName = "mmd",
                 LastName = "so",
                 Password = "123456"
-               
             });
-            context.SaveChanges();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<RegisterViewModel, SiteUsers>();
-            });
-            var mapper = config.CreateMapper();
-
-            var userService = new UserService(context, mapper);
+            _context.SaveChanges();
 
             var registerModel = new RegisterViewModel
             {
@@ -163,29 +124,20 @@ namespace ViflixUnitTests
                 ConfirmPassword = "123456"
             };
 
-            // Act
-            var result = await userService.Register(registerModel);
+            var result = await _userService.Register(registerModel);
 
-            // Assert
             Assert.False(result > 0);
-            Assert.Single(context.Users); 
+            Assert.Single(_context.Users);
         }
         #endregion
 
         #region Login
-
         [Fact]
         public void Login_WithValidCredential_ReturnUser()
         {
-            //Arrange
-
-            var option = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase(databaseName : "LoginValidTest").Options;
-
-            using var context = new AppDbContext(option);
-
             var hashedPassword = PasswordHelper.EncodePasswordMd5("123456");
 
-            context.Users.Add(new SiteUsers
+            _context.Users.Add(new SiteUsers
             {
                 UserName = "mmdi",
                 Password = hashedPassword,
@@ -193,15 +145,7 @@ namespace ViflixUnitTests
                 LastName = "sohrabi",
                 Email = "mmd@gmail.com"
             });
-            context.SaveChanges();
-
-            var config = new MapperConfiguration(cng =>
-            {
-                cng.CreateMap< SiteUsers , LoginViewModel>();
-            });
-            var mapper = config.CreateMapper();
-
-            var userService = new UserService(context , mapper);
+            _context.SaveChanges();
 
             var loginViewmodel = new LoginViewModel
             {
@@ -209,10 +153,7 @@ namespace ViflixUnitTests
                 Password = "123456"
             };
 
-            //Act
-            var result = userService.Login(loginViewmodel);
-
-            //Assert
+            var result = _userService.Login(loginViewmodel);
 
             Assert.NotNull(result);
             Assert.Equal("mmdi", result.UserName);
@@ -221,16 +162,9 @@ namespace ViflixUnitTests
         [Fact]
         public void Login_WithInvalidCredential_ReturnNull()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "LoginInvalidTest")
-                .Options;
-
-            using var context = new AppDbContext(options);
-
             var hashedPassword = PasswordHelper.EncodePasswordMd5("123456");
 
-            context.Users.Add(new SiteUsers
+            _context.Users.Add(new SiteUsers
             {
                 UserName = "mmdi",
                 Password = hashedPassword,
@@ -238,15 +172,7 @@ namespace ViflixUnitTests
                 LastName = "sohrabi",
                 Email = "mmd@gmail.com"
             });
-            context.SaveChanges();
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<SiteUsers, LoginViewModel>();
-            });
-            var mapper = config.CreateMapper();
-
-            var userService = new UserService(context, mapper);
+            _context.SaveChanges();
 
             var loginModel = new LoginViewModel
             {
@@ -254,20 +180,16 @@ namespace ViflixUnitTests
                 Password = "wrongPass"
             };
 
-            //Act
+            var result = _userService.Login(loginModel);
 
-            var result = userService.Login(loginModel);
-
-            // Assert
             Assert.Null(result);
         }
-
         #endregion
 
         #region GetUserNamebyUserId
 
         [Fact]
-        public void GetUserNamebyUserId_WithExistUsername_ReTurnTrue()
+        public void GetUserIdByUserName_WIthValidUserName_ReturnTrue()
         {
             //Arrange
 
@@ -280,8 +202,108 @@ namespace ViflixUnitTests
                 Email = "test@gmail.com"
             };
 
-            
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            //Act 
+
+            var result = _userService.GetUserIdByUserName("mmdi");
+
+            //Assert
+
+            Assert.Equal(user.Id, result);
         }
+
+        #endregion
+
+        #region AddUser
+
+        [Fact]
+        public async Task AddUser_withValidData_returnTrue()
+        {
+            //Arrange
+            var user = new UserViewModel
+            {
+                UserName = "mmd_sohrabi",
+                FirstName = "mmd",
+                LastName = "sohrabi",
+                Password = "123456",
+                Email = "test@gmail.com"
+            };
+
+            //Act
+            var result = await _userService.AddUser(user);
+
+            //Assert
+            Assert.True(result > 0);
+            var userInDb = _context.Users.FirstOrDefault(u => u.Id == result);
+            Assert.NotNull(userInDb);
+            Assert.Equal("mmd_sohrabi", userInDb.UserName);
+        }
+
+        [Fact]
+        public async Task Adduser_withInvalidData_ReturnFalse()
+        {
+            //Arrange
+            var user = new UserViewModel
+            {
+                UserName = "mmd_sohrabi",
+                FirstName = "mmd",
+                LastName = "sohrabi",
+                Password = "123456",
+                Email = "test@gmail.com"
+            };
+            await _userService.AddUser(user);
+
+            //Act
+            var result = await _userService.AddUser(user);
+
+            //Assert
+            Assert.Equal(-1, result);
+        }
+
+        #endregion
+
+        #region EditUser
+        [Fact]
+        public async Task EditUser_WithValidData_ReturnTrue()
+        {
+            //Arrange
+            var user = new SiteUsers
+            {
+                UserName = "mmd_sohrabi",
+                FirstName = "mmd",
+                LastName = "sohrabi",
+                Password = PasswordHelper.EncodePasswordMd5("123456"),
+                Email = "test@gmail.com"
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            var UpdateUser = new UserViewModel
+            {
+                Id = user.Id,
+                UserName = "mmd_so",
+                FirstName = "mmdi",
+                LastName = "so",
+                Email = "testgm@gmail.com"
+            };
+
+            //Act
+             await _userService.EditUser(UpdateUser);
+
+            //Assert
+            
+
+            var update = await _context.Users.FindAsync(user.Id);
+            Assert.Equal("mmd_sohrabi", UpdateUser.UserName);
+            Assert.Equal("mmd", UpdateUser.FirstName);
+            Assert.Equal("sohrabi", UpdateUser.LastName);
+            Assert.Equal("test@gmail.com", UpdateUser.Email);
+
+        }
+
+       
 
         #endregion
     }
