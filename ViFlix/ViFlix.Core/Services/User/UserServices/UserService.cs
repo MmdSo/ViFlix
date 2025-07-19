@@ -116,24 +116,12 @@ namespace ViFlix.Core.Services.User.UserServices
            
         }
 
-        public async Task<bool> EditUser(UserViewModel user)
+        public async Task EditUser(UserViewModel user)
         {
-            var existingUser = await _context.Users.FindAsync(user.Id);
-            if (existingUser == null)
-                return false;
-
             var person = _mapper.Map<UserViewModel, SiteUsers>(user);
             EditEntity(person);
             await SaveChanges();
-            return true;
         }
-
-        //public async Task EditUser(UserViewModel user)
-        //{
-        //    var person = _mapper.Map<UserViewModel, SiteUsers>(user);
-        //    EditEntity(person);
-        //    await SaveChanges();
-        //}
 
         public IEnumerable<UserViewModel> GetAllUsers()
         {

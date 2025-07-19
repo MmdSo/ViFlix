@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -268,7 +270,7 @@ namespace ViflixUnitTests
         [Fact]
         public async Task EditUser_WithValidData_ReturnTrue()
         {
-            //Arrange
+            // Arrange
             var user = new SiteUsers
             {
                 UserName = "mmd_sohrabi",
@@ -280,31 +282,88 @@ namespace ViflixUnitTests
             _context.Users.Add(user);
             _context.SaveChanges();
 
-            var UpdateUser = new UserViewModel
+            
+            _context.Entry(user).State = EntityState.Detached;
+
+            var updateUser = new UserViewModel
             {
                 Id = user.Id,
-                UserName = "mmd_so",
+                UserName = "mmd_sohrabi",
                 FirstName = "mmdi",
                 LastName = "so",
-                Email = "testgm@gmail.com"
+                Email = "testgm@gmail.com",
+                Password = "123456"
             };
 
-            //Act
-             await _userService.EditUser(UpdateUser);
+            // Act
+            await _userService.EditUser(updateUser);
 
-            //Assert
-            
-
-            var update = await _context.Users.FindAsync(user.Id);
-            Assert.Equal("mmd_sohrabi", UpdateUser.UserName);
-            Assert.Equal("mmd", UpdateUser.FirstName);
-            Assert.Equal("sohrabi", UpdateUser.LastName);
-            Assert.Equal("test@gmail.com", UpdateUser.Email);
+            // Assert
+            var updatedUser = await _context.Users.FindAsync(user.Id);
+            Assert.NotNull(updatedUser);
+            Assert.Equal("mmd_sohrabi", updatedUser.UserName);
+            Assert.Equal("mmdi", updatedUser.FirstName);
+            Assert.Equal("so", updatedUser.LastName);
+            Assert.Equal("testgm@gmail.com", updatedUser.Email);
 
         }
 
-       
-
         #endregion
+
+        #region EditProfile
+        [Fact]
+        public async Task EditProfile_WithValidData_ReturnTrue()
+        {
+            // Arrange
+            var user = new SiteUsers
+            {
+                Id = 1,
+                UserName = "mmd",
+                avatar = "old.jpg",
+                FirstName = "Ali",
+                LastName = "Saeedi",
+                PhoneNumber = "09123456789",
+                age = 25
+            };
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            var profileViewModel = new ProfileViewModel
+            {
+                Id = 1,
+                FirstName = "Reza",
+                LastName = "Sadeghi",
+                PhoneNumber = "09998887766",
+                age = 30
+            };
+
+            // ساختن فایل آواتار تستی
+            var fileMock = new Mock<IFormFile>();
+            var content = "FakeImageContent";
+            var fileName = "avatar.jpg";
+            var ms = new MemoryStream();
+            var writer = new StreamWriter(ms);
+            writer.Write(content);
+            writer.Flush();
+            ms.Position = 0;
+
+            fileMock.Setup(_ => _.FileName).Returns(fileName);
+            fileMock.Setup(_ => _.Length).Returns(ms.Length);
+            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
+            fileMock.Setup(_ => _.CopyTo(It.IsAny<Stream>())).Callback<Stream>(stream => ms.CopyTo(stream));
+
+            // Act
+            await _userService.EditProfile(profileViewModel, fileMock.Object);
+
+            // Assert
+            var updated = await _context.Users.FindAsync(1);
+            Assert.Equal("Reza", updated.FirstName);
+            Assert.Equal("Sadeghi", updated.LastName);
+            Assert.Equal("09998887766", updated.PhoneNumber);
+            Assert.Equal(30, updated.age);
+            Assert.NotEqual("old.jpg", updated.avatar);
+
+            #endregion
+        }
     }
 }
