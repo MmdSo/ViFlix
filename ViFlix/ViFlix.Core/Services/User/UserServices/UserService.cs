@@ -54,35 +54,35 @@ namespace ViFlix.Core.Services.User.UserServices
 
         public async Task ChangeEmail(ChangeEmailViewModel Email, long userId)
         {
-            var person = GetUserById(userId);
+            var person = _context.Users.FirstOrDefault(u => u.Id == userId);
             person.Email = Email.NewEmail;
-            var user = _mapper.Map<UserViewModel, SiteUsers>(person);
+            //var user = _mapper.Map<UserViewModel, SiteUsers>(person);
 
-            EditEntity(user);
+            EditEntity(person);
             await SaveChanges();
         }
 
         public async Task ChangePassword(ChangePasswordViewModel pass , long userId )
         {
-            var person = GetUserById(userId);
+            var person = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (person.Password == PasswordHelper.EncodePasswordMd5(pass.CurrentPassword))
             {
                 person.Password = PasswordHelper.EncodePasswordMd5(pass.NewPassword);
             }
             
-            var user = _mapper.Map<UserViewModel, SiteUsers>(person);
+            //var user = _mapper.Map<UserViewModel, SiteUsers>(person);
 
-            EditEntity(user);
+            EditEntity(person);
             await SaveChanges();
         }
 
         public async Task DeleteUser(long UserId)
         {
-            UserViewModel user = GetUserById(UserId);
-            var person = _mapper.Map<UserViewModel, SiteUsers>(user);
+            var user = _context.Users.FirstOrDefault(u => u.Id == UserId);
+            //var person = _mapper.Map<UserViewModel, SiteUsers>(user);
 
-            person.IsDelete = true;
-            EditEntity(person);
+            user.IsDelete = true;
+            EditEntity(user);
             await SaveChanges();
         }
 
@@ -110,7 +110,8 @@ namespace ViFlix.Core.Services.User.UserServices
 
 
             EditEntity(_mapper.Map<UserViewModel, SiteUsers>(user));
-            
+
+
 
             await SaveChanges();
            

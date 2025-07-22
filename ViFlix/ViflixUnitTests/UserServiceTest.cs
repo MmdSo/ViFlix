@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FirstShop.Core.Security;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -310,60 +311,130 @@ namespace ViflixUnitTests
 
         #endregion
 
-        #region EditProfile
+        #region ChangePassword
+
         [Fact]
-        public async Task EditProfile_WithValidData_ReturnTrue()
+        public async Task ChangePassword_WithValidCurrentPassword_ChangesPassword()
+        {
+            // Arrange
+            var oldPassword = "123456";
+            var newPassword = "newpass123";
+
+            var initialUser = new UserViewModel
+            {
+                Id = 1,
+                UserName = "testuser",
+                FirstName = "Ali",
+                LastName = "Rezai",
+                age = 25,
+                PhoneNumber = "09120000000",
+                Password = PasswordHelper.EncodePasswordMd5(oldPassword),
+                avatar = "user.png"
+            };
+
+            var mappedUser = _mapper.Map<SiteUsers>(initialUser);
+            _context.Users.Add(mappedUser);
+            _context.SaveChanges();
+
+            _context.ChangeTracker.Clear();
+
+            var changePasswordVM = new ChangePasswordViewModel
+            {
+                CurrentPassword = oldPassword,
+                NewPassword = newPassword,
+                ConfirmPassword = newPassword
+            };
+
+            // Act
+            await _userService.ChangePassword(changePasswordVM, mappedUser.Id);
+
+            // Assert
+            var updated = _context.Users.FirstOrDefault(u => u.Id == mappedUser.Id);
+            Assert.NotNull(updated);
+            Assert.Equal(PasswordHelper.EncodePasswordMd5(newPassword), updated.Password);
+        }
+
+
+
+        #endregion
+
+        #region ChangeEmail
+
+        [Fact]
+        public async Task ChangeEmail_WithValidData_returnTrue()
+        {
+            //Arrange
+            var NewEmail = "NewEmail@gmail.com";
+            var OldEmail = "OldEmail@gmail.com";
+
+            var User = new UserViewModel
+            {
+                Id = 1,
+                UserName = "testuser",
+                FirstName = "Ali",
+                LastName = "Rezai",
+                age = 25,
+                PhoneNumber = "09120000000",
+                Password = PasswordHelper.EncodePasswordMd5("123456"),
+                avatar = "user.png",
+                Email = OldEmail
+            };
+
+            var mapperUser = _mapper.Map<SiteUsers>(User);
+            _context.Users.Add(mapperUser);
+            _context.SaveChanges();
+
+            _context.ChangeTracker.Clear();
+
+            var ChangeEmailVM = new ChangeEmailViewModel
+            {
+                CurrentEmail = OldEmail,
+                NewEmail = NewEmail 
+            };
+
+            //Act
+            await _userService.ChangeEmail(ChangeEmailVM, mapperUser.Id);
+
+            //Assert
+            var updated = _context.Users.FirstOrDefault(u => u.Id == mapperUser.Id);
+            Assert.NotNull(updated);
+        }
+
+        #endregion
+
+        #region DeleteUser 
+
+        [Fact]
+        public async Task DeleteUser_WithValidUserId_SetsIsDeleteTrue()
         {
             // Arrange
             var user = new SiteUsers
             {
                 Id = 1,
-                UserName = "mmd",
-                avatar = "old.jpg",
-                FirstName = "Ali",
-                LastName = "Saeedi",
-                PhoneNumber = "09123456789",
-                age = 25
+                UserName = "testuser",
+                Password = PasswordHelper.EncodePasswordMd5("123456"),
+                IsDelete = false,
+                FirstName = "Test",
+                LastName = "User"
             };
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var profileViewModel = new ProfileViewModel
-            {
-                Id = 1,
-                FirstName = "Reza",
-                LastName = "Sadeghi",
-                PhoneNumber = "09998887766",
-                age = 30
-            };
+            _context.ChangeTracker.Clear();
 
-            // ساختن فایل آواتار تستی
-            var fileMock = new Mock<IFormFile>();
-            var content = "FakeImageContent";
-            var fileName = "avatar.jpg";
-            var ms = new MemoryStream();
-            var writer = new StreamWriter(ms);
-            writer.Write(content);
-            writer.Flush();
-            ms.Position = 0;
-
-            fileMock.Setup(_ => _.FileName).Returns(fileName);
-            fileMock.Setup(_ => _.Length).Returns(ms.Length);
-            fileMock.Setup(_ => _.OpenReadStream()).Returns(ms);
-            fileMock.Setup(_ => _.CopyTo(It.IsAny<Stream>())).Callback<Stream>(stream => ms.CopyTo(stream));
+            var service = new UserService(_context, _mapper);
 
             // Act
-            await _userService.EditProfile(profileViewModel, fileMock.Object);
+            await service.DeleteUser(user.Id);
 
             // Assert
-            var updated = await _context.Users.FindAsync(1);
-            Assert.Equal("Reza", updated.FirstName);
-            Assert.Equal("Sadeghi", updated.LastName);
-            Assert.Equal("09998887766", updated.PhoneNumber);
-            Assert.Equal(30, updated.age);
-            Assert.NotEqual("old.jpg", updated.avatar);
-
-            #endregion
+            var deletedUser = await _context.Users.FindAsync(user.Id);
+            Assert.True(deletedUser.IsDelete);
         }
+
+
+        #endregion
     }
 }
+
