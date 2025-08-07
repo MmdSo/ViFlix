@@ -52,6 +52,7 @@ namespace ViflixUnitTests
         [Fact]
         public void UserNameExist_WithExistUserTest_ReturnTrue()
         {
+            //Arrange
             _context.Users.Add(new SiteUsers
             {
                 UserName = "mmd_sohrabi",
@@ -61,8 +62,10 @@ namespace ViflixUnitTests
             });
             _context.SaveChanges();
 
+            //Act
             var result = _userService.UserNameExist("mmd_sohrabi");
 
+            //Assert
             Assert.True(result);
         }
 
